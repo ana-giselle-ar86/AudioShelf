@@ -43,9 +43,3 @@ def change_system_volume(delta: int):
         
     except Exception:
         speak("System Volume Error", LEVEL_CRITICAL)
-
-
-def toggle_mute(frame):
-    is_muted = frame.engine.get_mute()
-    frame.engine.set_mute(not is_muted)
-    speak(_("Mute On") if not is_muted else _("Mute Off"), LEVEL_MINIMAL)
