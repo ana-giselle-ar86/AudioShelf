@@ -8,19 +8,13 @@ import datetime
 from typing import Dict, Optional, List, Any
 from i18n import _
 
-
 class PlaybackRepository:
-    """
-    Manages database interactions for playback state and bookmarks.
-    """
-
     def __init__(self, conn: sqlite3.Connection):
         self.conn = conn
 
     def get_playback_state(self, book_id: int) -> Optional[Dict[str, Any]]:
         if self.conn is None:
             return None
-
         cur = None
         try:
             cur = self.conn.cursor()
@@ -32,7 +26,6 @@ class PlaybackRepository:
                     last_speed_rate,
                     last_eq_settings,
                     is_eq_enabled,
-                    last_nr_mode,
                     last_played_at
                 FROM playback_state 
                 WHERE book_id = ?
@@ -47,8 +40,7 @@ class PlaybackRepository:
                     "last_speed_rate": row[2],
                     "last_eq_settings": row[3],
                     "is_eq_enabled": bool(row[4]),
-                    "last_nr_mode": row[5],
-                    "last_played_at": row[6] # این فیلد اضافه شد
+                    "last_played_at": row[5]
                 }
             return None
         except sqlite3.Error as e:
@@ -65,30 +57,25 @@ class PlaybackRepository:
             position_ms: int,
             speed_rate: float,
             eq_settings: str,
-            is_eq_enabled: bool,
-            nr_mode: int
+            is_eq_enabled: bool
     ):
-        """
-        Saves the current playback state and updates the last played timestamp for the book.
-        """
         if self.conn is None:
             return
         try:
-            now = datetime.datetime.now()
-
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
             with self.conn:
                 self.conn.execute(
                     """
                     INSERT OR REPLACE INTO playback_state
                     (
                         book_id, last_file_index, last_position_ms, last_speed_rate,
-                        last_eq_settings, is_eq_enabled, last_nr_mode
+                        last_eq_settings, is_eq_enabled, last_played_at
                     )
                     VALUES (?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         book_id, file_index, position_ms, speed_rate,
-                        eq_settings, is_eq_enabled, nr_mode
+                        eq_settings, is_eq_enabled, now
                     )
                 )
                 self.conn.execute(
@@ -96,18 +83,11 @@ class PlaybackRepository:
                     (now, book_id)
                 )
         except sqlite3.Error as e:
-            logging.error(f"Error saving playback state/timestamp: {e}", exc_info=True)
+            logging.error(f"Error saving playback state: {e}", exc_info=True)
 
     def add_bookmark(self, book_id: int, file_index: int, position_ms: int, title: str, note: str) -> Optional[int]:
-        """
-        Adds a new bookmark for a specific book and file position.
-
-        Returns:
-            The ID of the new bookmark, or None on failure.
-        """
         if self.conn is None:
             return None
-
         cur = None
         try:
             with self.conn:
@@ -125,12 +105,8 @@ class PlaybackRepository:
                 cur.close()
 
     def get_bookmarks_for_book(self, book_id: int) -> List[Dict[str, Any]]:
-        """
-        Retrieves all bookmarks associated with a specific book.
-        """
         if self.conn is None:
             return []
-
         query = """
         SELECT 
             b.id, b.book_id, b.file_index, pf.file_path, b.position_ms, b.title, b.note
@@ -163,7 +139,6 @@ class PlaybackRepository:
                 cur.close()
 
     def delete_bookmark(self, bookmark_id: int):
-        """Deletes a specific bookmark by its ID."""
         if self.conn is None:
             return
         try:

@@ -5,28 +5,26 @@
 import logging
 import sqlite3
 from typing import Dict, Optional, List, Any
+from i18n import _
 
+def _translate_metadata():
+    _("Flat")
+    _("Vocal Clarity")
+    _("Fullness")
+    _("Reduce Boominess")
+    _("De-Esser")
 
 class EqualizerRepository:
-    """
-    Manages database interactions for Equalizer presets.
-    Handles both default (system) presets and user-defined presets.
-    """
-
     def __init__(self, conn: sqlite3.Connection, default_presets: Dict[str, str]):
         self.conn = conn
         self.default_presets = default_presets
         self._initialize_default_presets()
 
     def _initialize_default_presets(self):
-        """Populates the database with default EQ presets if they do not already exist."""
         if self.conn is None:
             return
         try:
-            presets_data = [
-                (name, settings)
-                for name, settings in self.default_presets.items()
-            ]
+            presets_data = [(name, settings) for name, settings in self.default_presets.items()]
             with self.conn:
                 self.conn.executemany(
                     "INSERT OR IGNORE INTO eq_presets (name, settings) VALUES (?, ?)",
@@ -36,13 +34,6 @@ class EqualizerRepository:
             logging.error(f"Error initializing default EQ presets: {e}", exc_info=True)
 
     def get_all_presets(self) -> List[Dict[str, Any]]:
-        """
-        Retrieves all EQ presets from the database.
-        Presets are sorted alphabetically, with 'Flat' always appearing first.
-
-        Returns:
-            A list of dictionaries, each containing 'id', 'name', and 'settings'.
-        """
         if self.conn is None:
             return []
 
@@ -50,14 +41,24 @@ class EqualizerRepository:
         cur = None
         try:
             cur = self.conn.cursor()
-            cur.execute(
-                "SELECT id, name, settings FROM eq_presets "
-                "ORDER BY CASE WHEN name = 'Flat' THEN 0 ELSE 1 END, name"
-            )
+            query = """
+                SELECT id, name, settings FROM eq_presets 
+                ORDER BY 
+                    CASE name
+                        WHEN 'Flat' THEN 0
+                        WHEN 'Vocal Clarity' THEN 1
+                        WHEN 'Fullness' THEN 2
+                        WHEN 'Reduce Boominess' THEN 3
+                        WHEN 'De-Esser' THEN 4
+                        ELSE 5
+                    END, 
+                    name
+            """
+            cur.execute(query)
             for row in cur.fetchall():
                 results.append({
                     "id": row[0],
-                    "name": row[1],
+                    "name": _(row[1]),
                     "settings": row[2]
                 })
             return results
@@ -69,19 +70,8 @@ class EqualizerRepository:
                 cur.close()
 
     def save_preset(self, name: str, settings: str) -> Optional[int]:
-        """
-        Saves a new user-defined preset to the database.
-
-        Args:
-            name: The unique name for the preset.
-            settings: The 10-band equalizer settings string.
-
-        Returns:
-            The ID of the new preset if successful, or None if the name already exists.
-        """
         if self.conn is None:
             return None
-
         cur = None
         try:
             with self.conn:
@@ -102,7 +92,6 @@ class EqualizerRepository:
                 cur.close()
 
     def delete_preset(self, preset_id: int):
-        """Deletes a preset from the database by its ID."""
         if self.conn is None:
             return
         try:

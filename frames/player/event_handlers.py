@@ -150,7 +150,6 @@ def save_playback_state(frame: 'PlayerFrame', final_time_ms: Optional[int] = Non
             speed_rate=current_rate,
             eq_settings=frame.current_eq_settings,
             is_eq_enabled=frame.is_eq_enabled,
-            nr_mode=0
         )
     except Exception as e:
         logging.error(f"Error saving state: {e}")

@@ -118,10 +118,10 @@ class DatabaseManager:
 
         self.default_eq_presets = {
             "Flat": "0,0,0,0,0,0,0,0,0,0",
-            "Vocal Clarity": "-4,-2,0,-1,0,3,1,0,0,-1",
-            "Fullness": "-2,1,3,0,-1,1,0,-2,-2,-3",
-            "Reduce Boominess": "-6,-4,-2,0,0,2,1,0,0,0",
-            "De-Esser": "0,0,0,0,0,1,-3,-4,-2,0"
+            "Vocal Clarity": "-12,-10,-4,-1,1,3,5,4,2,0",
+    "Fullness": "0,6,2,4,2,1,0,-1,-2,-4",
+    "Reduce Boominess": "-12,-10,-6,-2,0,1,2,1,0,0",
+    "De-Esser": "0,0,0,1,2,0,-4,-8,-5,-2"
         }
 
         self._establish_connection()
@@ -226,8 +226,7 @@ class DatabaseManager:
 
             new_playback_columns = {
                 'last_eq_settings': 'TEXT DEFAULT "0,0,0,0,0,0,0,0,0,0"',
-                'is_eq_enabled': 'BOOLEAN DEFAULT 0',
-                'last_nr_mode': 'INTEGER DEFAULT 0'
+                'is_eq_enabled': 'BOOLEAN DEFAULT 0'
             }
 
             with self.conn:
@@ -235,6 +234,10 @@ class DatabaseManager:
                     if col_name not in playback_columns:
                         logging.info(f"Schema Update: Adding '{col_name}' to 'playback_state' table.")
                         self.conn.execute(f"ALTER TABLE playback_state ADD COLUMN {col_name} {col_type}")
+                
+                if 'last_played_at' not in playback_columns:
+                    logging.info("Schema Update: Adding 'last_played_at' to 'playback_state' table.")
+                    self.conn.execute("ALTER TABLE playback_state ADD COLUMN last_played_at TIMESTAMP")
 
             cur.execute("PRAGMA table_info(books)")
             updated_book_columns = [col[1] for col in cur.fetchall()]
@@ -251,7 +254,6 @@ class DatabaseManager:
                 cur.close()
 
     def _initialize_defaults(self):
-        """Populates the database with default data if missing."""
         try:
             with self.conn:
                 self.conn.execute(
@@ -261,6 +263,13 @@ class DatabaseManager:
                     "INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)",
                     self.default_settings.items()
                 )
+                for name, settings in self.default_eq_presets.items():
+                    self.conn.execute(
+                        "INSERT INTO eq_presets (name, settings) VALUES (?, ?) "
+                        "ON CONFLICT(name) DO UPDATE SET settings = excluded.settings "
+                        "WHERE name IN ('Vocal Clarity', 'Fullness', 'Reduce Boominess', 'De-Esser')",
+                        (name, settings)
+                    )
         except sqlite3.Error as e:
             logging.error(f"Error initializing defaults: {e}")
 
@@ -332,6 +341,9 @@ class DatabaseManager:
         return self.shelf_repo.get_shelf_details(shelf_id)
 
     def get_playback_state(self, book_id: int) -> Optional[Dict[str, Any]]:
+        """Retrieves the last saved playback state for a book."""
+        if self.conn is None:
+            self._establish_connection()
         return self.playback_repo.get_playback_state(book_id)
 
     def save_playback_state(
@@ -341,13 +353,12 @@ class DatabaseManager:
             position_ms: int,
             speed_rate: float,
             eq_settings: str,
-            is_eq_enabled: bool,
-            nr_mode: int
+            is_eq_enabled: bool
     ):
         with self.db_lock:
             return self.playback_repo.save_playback_state(
                 book_id, file_index, position_ms, speed_rate,
-                eq_settings, is_eq_enabled, nr_mode
+                eq_settings, is_eq_enabled
             )
 
     def add_bookmark(self, book_id: int, file_index: int, position_ms: int, title: str, note: str) -> Optional[int]:
