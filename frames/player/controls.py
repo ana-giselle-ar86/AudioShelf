@@ -45,9 +45,17 @@ def on_key_down(frame, event: wx.KeyEvent):
 
     # Volume
     elif keycode == wx.WXK_UP:
-        volume_logic.change_volume(frame, 5)
+        if shift_down:
+            volume_logic.change_system_volume(5)
+        else:
+            volume_logic.change_volume(frame, 5)
+
     elif keycode == wx.WXK_DOWN:
-        volume_logic.change_volume(frame, -5)
+        if shift_down:
+            volume_logic.change_system_volume(-5)
+        else:
+            volume_logic.change_volume(frame, -5)
+
     elif keycode == ord('M'):
         volume_logic.toggle_mute(frame)
 
