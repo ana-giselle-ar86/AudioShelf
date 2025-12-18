@@ -1,4 +1,14 @@
+# --- GUI & Core ---
 wxPython==4.2.4
+
+# --- Audio Engine & Metadata ---
 python-mpv==1.0.8
 tinytag==2.1.2
+
+# --- System Audio Control (Pycaw) ---
+comtypes==1.4.14
+psutil==7.1.3
+pycaw==20251023
+
+# --- Build Tools ---
 pyinstaller==6.17.0
