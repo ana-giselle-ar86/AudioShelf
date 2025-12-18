@@ -6,6 +6,7 @@ import logging
 import sqlite3
 import datetime
 from typing import Dict, Optional, List, Any
+from i18n import _
 
 
 class PlaybackRepository:
@@ -17,15 +18,6 @@ class PlaybackRepository:
         self.conn = conn
 
     def get_playback_state(self, book_id: int) -> Optional[Dict[str, Any]]:
-        """
-        Retrieves the saved playback state (position, speed, audio settings) for a specific book.
-
-        Args:
-            book_id: The ID of the book.
-
-        Returns:
-            A dictionary containing playback state details, or None if not found.
-        """
         if self.conn is None:
             return None
 
@@ -40,25 +32,27 @@ class PlaybackRepository:
                     last_speed_rate,
                     last_eq_settings,
                     is_eq_enabled,
-                    last_nr_mode
+                    last_nr_mode,
+                    last_played_at
                 FROM playback_state 
                 WHERE book_id = ?
                 """,
                 (book_id,)
             )
-            result = cur.fetchone()
-            if result:
+            row = cur.fetchone()
+            if row:
                 return {
-                    "last_file_index": result[0],
-                    "last_position_ms": result[1],
-                    "last_speed_rate": result[2],
-                    "last_eq_settings": result[3],
-                    "is_eq_enabled": bool(result[4]),
-                    "last_nr_mode": result[5]
+                    "last_file_index": row[0],
+                    "last_position_ms": row[1],
+                    "last_speed_rate": row[2],
+                    "last_eq_settings": row[3],
+                    "is_eq_enabled": bool(row[4]),
+                    "last_nr_mode": row[5],
+                    "last_played_at": row[6] # این فیلد اضافه شد
                 }
             return None
         except sqlite3.Error as e:
-            logging.warning(f"Error getting playback state: {e}", exc_info=True)
+            logging.error(f"Error getting playback state: {e}", exc_info=True)
             return None
         finally:
             if cur:
@@ -155,7 +149,7 @@ class PlaybackRepository:
                     "id": row[0],
                     "book_id": row[1],
                     "file_index": row[2],
-                    "file_path": row[3] or "File Missing?",
+                    "file_path": row[3] or _("File Missing?"),
                     "position_ms": row[4],
                     "title": row[5],
                     "note": row[6]

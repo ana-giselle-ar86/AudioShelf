@@ -4,7 +4,6 @@
 
 import wx
 import logging
-from typing import List, Tuple, Dict
 from database import db_manager
 from i18n import _
 
@@ -16,7 +15,6 @@ SETTING_SEEK_FWD = 'seek_forward_ms'
 SETTING_SEEK_BWD = 'seek_backward_ms'
 SETTING_LONG_SEEK_FWD = 'long_seek_forward_ms'
 SETTING_LONG_SEEK_BWD = 'long_seek_backward_ms'
-SETTING_RESUME_REWIND = 'resume_rewind_ms'
 SETTING_SMART_RESUME_THRESHOLD = 'smart_resume_threshold_sec'
 SETTING_SMART_RESUME_REWIND = 'smart_resume_rewind_ms'
 
@@ -28,218 +26,150 @@ EOD_ACTIONS = {
 }
 EOD_ACTIONS_REV = {v: k for k, v in EOD_ACTIONS.items()}
 
-REWIND_OPTIONS = [
-    (0, _("Disabled")),
-    (5000, _("5 seconds")),
-    (10000, _("10 seconds")),
-    (15000, _("15 seconds")),
-    (30000, _("30 seconds")),
-    (60000, _("1 minute")),
-    (120000, _("2 minutes")),
-    (300000, _("5 minutes")),
-]
-
 SMART_THRESHOLD_OPTIONS = [
+    (0, _("Always (Disabled Threshold)")),
     (60, _("1 minute")),
     (120, _("2 minutes")),
     (300, _("5 minutes")),
     (600, _("10 minutes")),
     (1800, _("30 minutes")),
     (3600, _("1 hour")),
-    (0, _("Disabled")),
 ]
 
 SMART_REWIND_OPTIONS = [
+    (0, _("Disabled")),
     (5000, _("5 seconds")),
     (10000, _("10 seconds")),
     (15000, _("15 seconds")),
     (20000, _("20 seconds")),
     (30000, _("30 seconds")),
+    (60000, _("1 minute")),
+    (120000, _("2 minutes")),
+    (180000, _("3 minutes")),
+    (240000, _("4 minutes")),
+    (300000, _("5 minutes")),
+    (360000, _("6 minutes")),
+    (420000, _("7 minutes")),
+    (480000, _("8 minutes")),
+    (540000, _("9 minutes")),
+    (600000, _("10 minutes")),
+    (900000, _("15 minutes")),
 ]
 
-
 class TabPanel(wx.Panel):
-    """
-    The "Playback" settings tab.
-    Manages seeking behavior, auto-rewind options, end-of-book actions,
-    and smart resume logic.
-    """
-
     def __init__(self, parent):
         super(TabPanel, self).__init__(parent)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # Playback Behavior Section
-        playback_box = wx.StaticBox(self, label=_("Playback Behavior"))
-        playback_box_sizer = wx.StaticBoxSizer(playback_box, wx.VERTICAL)
+        # 1. Auto-Rewind Section
+        rewind_box = wx.StaticBox(self, label=_("Auto-Rewind Settings"))
+        rewind_box_sizer = wx.StaticBoxSizer(rewind_box, wx.VERTICAL)
 
-        self.pause_checkbox = wx.CheckBox(
-            self,
-            label=_("Automatically pause playback when a dialog window opens (e.g., Bookmark, File List).")
-        )
-        playback_box_sizer.Add(self.pause_checkbox, 0, wx.ALL | wx.EXPAND, 8)
+        help_text = wx.StaticText(self, label=_("To help you remember the story, AudioShelf can jump back slightly after a break."))
+        rewind_box_sizer.Add(help_text, 0, wx.ALL, 8)
 
-        self.resume_on_jump_checkbox = wx.CheckBox(
-            self,
-            label=_("Automatically resume playback after a major jump (e.g., Go To, Next File) if player was paused.")
-        )
-        playback_box_sizer.Add(self.resume_on_jump_checkbox, 0, wx.ALL | wx.EXPAND, 8)
-
-        playback_box_sizer.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.ALL, 8)
-
-        # Resume Rewind (On Load)
-        rewind_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        rewind_label = wx.StaticText(self, label=_("When opening a book, rewind by:"))
-
-        self.rewind_choices_str = [opt[1] for opt in REWIND_OPTIONS]
-        self.rewind_values_int = [opt[0] for opt in REWIND_OPTIONS]
-
-        self.rewind_combo = wx.ComboBox(self, choices=self.rewind_choices_str, style=wx.CB_READONLY)
-
-        rewind_sizer.Add(rewind_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
-        rewind_sizer.Add(self.rewind_combo, 0, wx.ALIGN_CENTER_VERTICAL)
-
-        playback_box_sizer.Add(rewind_sizer, 0, wx.ALL | wx.EXPAND, 8)
-        playback_box_sizer.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.ALL, 8)
-
-        # Smart Resume
-        smart_sizer = wx.FlexGridSizer(2, 2, 5, 5)
-        smart_sizer.AddGrowableCol(1, 1)
-
-        smart_thresh_label = wx.StaticText(self, label=_("Smart Resume: If paused for more than:"))
+        # Threshold Row
+        thresh_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        thresh_label = wx.StaticText(self, label=_("Only if the break was longer than:"))
         self.smart_thresh_choices_str = [opt[1] for opt in SMART_THRESHOLD_OPTIONS]
         self.smart_thresh_values_int = [opt[0] for opt in SMART_THRESHOLD_OPTIONS]
         self.smart_thresh_combo = wx.ComboBox(self, choices=self.smart_thresh_choices_str, style=wx.CB_READONLY)
+        thresh_sizer.Add(thresh_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
+        thresh_sizer.Add(self.smart_thresh_combo, 0, wx.ALIGN_CENTER_VERTICAL)
+        rewind_box_sizer.Add(thresh_sizer, 0, wx.ALL, 8)
 
-        smart_sizer.Add(smart_thresh_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
-        smart_sizer.Add(self.smart_thresh_combo, 0, wx.ALIGN_CENTER_VERTICAL)
-
-        smart_rewind_label = wx.StaticText(self, label=_("Then automatically rewind by:"))
+        # Amount Row
+        amount_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        amount_label = wx.StaticText(self, label=_("Amount to jump back (Seconds):"))
         self.smart_rewind_choices_str = [opt[1] for opt in SMART_REWIND_OPTIONS]
         self.smart_rewind_values_int = [opt[0] for opt in SMART_REWIND_OPTIONS]
         self.smart_rewind_combo = wx.ComboBox(self, choices=self.smart_rewind_choices_str, style=wx.CB_READONLY)
+        amount_sizer.Add(amount_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
+        amount_sizer.Add(self.smart_rewind_combo, 0, wx.ALIGN_CENTER_VERTICAL)
+        rewind_box_sizer.Add(amount_sizer, 0, wx.ALL, 8)
 
-        smart_sizer.Add(smart_rewind_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 10)
-        smart_sizer.Add(self.smart_rewind_combo, 0, wx.ALIGN_CENTER_VERTICAL)
+        # 2. Playback Behavior
+        playback_box = wx.StaticBox(self, label=_("Playback Behavior"))
+        playback_box_sizer = wx.StaticBoxSizer(playback_box, wx.VERTICAL)
 
-        playback_box_sizer.Add(smart_sizer, 0, wx.ALL | wx.EXPAND, 8)
-        playback_box_sizer.Add(wx.StaticLine(self), 0, wx.EXPAND | wx.ALL, 8)
+        self.pause_checkbox = wx.CheckBox(self, label=_("Automatically pause playback when a dialog window opens."))
+        playback_box_sizer.Add(self.pause_checkbox, 0, wx.ALL | wx.EXPAND, 8)
 
-        # End of Book Action
+        self.resume_on_jump_checkbox = wx.CheckBox(self, label=_("Automatically resume playback after a major jump (Go To, Next File)."))
+        playback_box_sizer.Add(self.resume_on_jump_checkbox, 0, wx.ALL | wx.EXPAND, 8)
+
         self.eod_choices = list(EOD_ACTIONS.values())
-        self.eod_radio = wx.RadioBox(
-            self,
-            label=_("When the end of a book is reached:"),
-            choices=self.eod_choices,
-            majorDimension=1,
-            style=wx.RA_SPECIFY_COLS
-        )
+        self.eod_radio = wx.RadioBox(self, label=_("When the end of a book is reached:"), choices=self.eod_choices, majorDimension=1, style=wx.RA_SPECIFY_COLS)
         playback_box_sizer.Add(self.eod_radio, 0, wx.EXPAND | wx.ALL, 8)
 
-        # Seek Times Section
+        # 3. Seek Times
         seek_box = wx.StaticBox(self, label=_("Seek Times"))
         seek_sizer = wx.StaticBoxSizer(seek_box, wx.VERTICAL)
-
         grid_sizer = wx.FlexGridSizer(4, 2, 5, 5)
         grid_sizer.AddGrowableCol(1, 1)
 
-        seek_fwd_label = wx.StaticText(self, label=_("Short Seek Forward (→) (seconds):"))
+        grid_sizer.Add(wx.StaticText(self, label=_("Short Seek Forward (Right Arrow) (seconds):")), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         self.seek_fwd_spin = wx.SpinCtrl(self, min=1, max=300, initial=30)
-        grid_sizer.Add(seek_fwd_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         grid_sizer.Add(self.seek_fwd_spin, 1, wx.EXPAND | wx.ALL, 5)
 
-        seek_bwd_label = wx.StaticText(self, label=_("Short Seek Backward (←) (seconds):"))
+        grid_sizer.Add(wx.StaticText(self, label=_("Short Seek Backward (Left Arrow) (seconds):")), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         self.seek_bwd_spin = wx.SpinCtrl(self, min=1, max=300, initial=10)
-        grid_sizer.Add(seek_bwd_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         grid_sizer.Add(self.seek_bwd_spin, 1, wx.EXPAND | wx.ALL, 5)
 
-        long_seek_fwd_label = wx.StaticText(self, label=_("Long Seek Forward (Ctrl+→) (minutes):"))
+        grid_sizer.Add(wx.StaticText(self, label=_("Long Seek Forward (Ctrl+Right) (minutes):")), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         self.long_seek_fwd_spin = wx.SpinCtrl(self, min=1, max=30, initial=5)
-        grid_sizer.Add(long_seek_fwd_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         grid_sizer.Add(self.long_seek_fwd_spin, 1, wx.EXPAND | wx.ALL, 5)
 
-        long_seek_bwd_label = wx.StaticText(self, label=_("Long Seek Backward (Ctrl+←) (minutes):"))
+        grid_sizer.Add(wx.StaticText(self, label=_("Long Seek Backward (Ctrl+Left) (minutes):")), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         self.long_seek_bwd_spin = wx.SpinCtrl(self, min=1, max=30, initial=5)
-        grid_sizer.Add(long_seek_bwd_label, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 5)
         grid_sizer.Add(self.long_seek_bwd_spin, 1, wx.EXPAND | wx.ALL, 5)
 
         seek_sizer.Add(grid_sizer, 1, wx.EXPAND | wx.ALL, 8)
 
+        main_sizer.Add(rewind_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
         main_sizer.Add(playback_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
         main_sizer.Add(seek_sizer, 0, wx.EXPAND | wx.ALL, 10)
         self.SetSizer(main_sizer)
-
         self._load_settings()
 
     def _safe_get_int_setting(self, key: str, default_val: int) -> int:
-        """Safely retrieves an integer setting from the database."""
         try:
             return int(db_manager.get_setting(key))
         except (TypeError, ValueError, AttributeError):
-            logging.warning(f"Could not parse int setting '{key}', using default {default_val}")
             return default_val
 
     def _load_settings(self):
-        """Loads current playback settings from the database into the UI."""
-        pause_setting = db_manager.get_setting(SETTING_PAUSE_ON_DIALOG)
-        is_paused_on_dialog = (pause_setting == 'True')
-        self.pause_checkbox.SetValue(is_paused_on_dialog)
-
-        resume_setting = db_manager.get_setting(SETTING_RESUME_ON_JUMP)
-        is_resume_enabled = (resume_setting == 'True' or resume_setting is None)
-        self.resume_on_jump_checkbox.SetValue(is_resume_enabled)
-
-        rewind_val = self._safe_get_int_setting(SETTING_RESUME_REWIND, 0)
-        try:
-            idx = self.rewind_values_int.index(rewind_val)
-        except ValueError:
-            idx = 0
-        self.rewind_combo.SetSelection(idx)
+        self.pause_checkbox.SetValue(db_manager.get_setting(SETTING_PAUSE_ON_DIALOG) == 'True')
+        self.resume_on_jump_checkbox.SetValue(db_manager.get_setting(SETTING_RESUME_ON_JUMP) != 'False')
 
         smart_thresh_val = self._safe_get_int_setting(SETTING_SMART_RESUME_THRESHOLD, 300)
         try:
             s_t_idx = self.smart_thresh_values_int.index(smart_thresh_val)
         except ValueError:
-            s_t_idx = 2
+            s_t_idx = 3
         self.smart_thresh_combo.SetSelection(s_t_idx)
 
         smart_rewind_val = self._safe_get_int_setting(SETTING_SMART_RESUME_REWIND, 10000)
         try:
             s_r_idx = self.smart_rewind_values_int.index(smart_rewind_val)
         except ValueError:
-            s_r_idx = 1
+            s_r_idx = 2
         self.smart_rewind_combo.SetSelection(s_r_idx)
 
         current_eod_action = db_manager.get_setting(SETTING_END_OF_BOOK) or 'stop'
         display_eod_action = EOD_ACTIONS.get(current_eod_action, _("Stop playback"))
         self.eod_radio.SetStringSelection(display_eod_action)
 
-        seek_fwd_ms = self._safe_get_int_setting(SETTING_SEEK_FWD, 30000)
-        self.seek_fwd_spin.SetValue(seek_fwd_ms // 1000)
-
-        seek_bwd_ms = self._safe_get_int_setting(SETTING_SEEK_BWD, 10000)
-        self.seek_bwd_spin.SetValue(seek_bwd_ms // 1000)
-
-        long_seek_fwd_ms = self._safe_get_int_setting(SETTING_LONG_SEEK_FWD, 300000)
-        self.long_seek_fwd_spin.SetValue(long_seek_fwd_ms // 60000)
-
-        long_seek_bwd_ms = self._safe_get_int_setting(SETTING_LONG_SEEK_BWD, 300000)
-        self.long_seek_bwd_spin.SetValue(long_seek_bwd_ms // 60000)
+        self.seek_fwd_spin.SetValue(self._safe_get_int_setting(SETTING_SEEK_FWD, 30000) // 1000)
+        self.seek_bwd_spin.SetValue(self._safe_get_int_setting(SETTING_SEEK_BWD, 10000) // 1000)
+        self.long_seek_fwd_spin.SetValue(self._safe_get_int_setting(SETTING_LONG_SEEK_FWD, 300000) // 60000)
+        self.long_seek_bwd_spin.SetValue(self._safe_get_int_setting(SETTING_LONG_SEEK_BWD, 300000) // 60000)
 
     def save_settings(self):
-        """Saves the modified playback settings to the database."""
-        pause_value = 'True' if self.pause_checkbox.GetValue() else 'False'
-        db_manager.set_setting(SETTING_PAUSE_ON_DIALOG, pause_value)
-
-        resume_value = 'True' if self.resume_on_jump_checkbox.GetValue() else 'False'
-        db_manager.set_setting(SETTING_RESUME_ON_JUMP, resume_value)
-
-        selected_idx = self.rewind_combo.GetSelection()
-        if selected_idx != wx.NOT_FOUND:
-            val_to_save = self.rewind_values_int[selected_idx]
-            db_manager.set_setting(SETTING_RESUME_REWIND, str(val_to_save))
-
+        db_manager.set_setting(SETTING_PAUSE_ON_DIALOG, str(self.pause_checkbox.GetValue()))
+        db_manager.set_setting(SETTING_RESUME_ON_JUMP, str(self.resume_on_jump_checkbox.GetValue()))
+        
         s_t_idx = self.smart_thresh_combo.GetSelection()
         if s_t_idx != wx.NOT_FOUND:
             db_manager.set_setting(SETTING_SMART_RESUME_THRESHOLD, str(self.smart_thresh_values_int[s_t_idx]))
@@ -249,8 +179,7 @@ class TabPanel(wx.Panel):
             db_manager.set_setting(SETTING_SMART_RESUME_REWIND, str(self.smart_rewind_values_int[s_r_idx]))
 
         selected_eod_display = self.eod_radio.GetStringSelection()
-        selected_eod_code = EOD_ACTIONS_REV.get(selected_eod_display, 'stop')
-        db_manager.set_setting(SETTING_END_OF_BOOK, selected_eod_code)
+        db_manager.set_setting(SETTING_END_OF_BOOK, EOD_ACTIONS_REV.get(selected_eod_display, 'stop'))
 
         db_manager.set_setting(SETTING_SEEK_FWD, str(self.seek_fwd_spin.GetValue() * 1000))
         db_manager.set_setting(SETTING_SEEK_BWD, str(self.seek_bwd_spin.GetValue() * 1000))

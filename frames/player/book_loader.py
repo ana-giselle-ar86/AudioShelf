@@ -5,30 +5,19 @@
 import wx
 import os
 import logging
+from datetime import datetime
 from typing import Optional
 from database import db_manager
 from i18n import _
 from . import event_handlers
 
-
 class BookLoader:
-    """
-    Manages the process of loading book data from the database and
-    initializing the playback engine with the book's playlist.
-    Handles switching between books and managing player state during transitions.
-    """
-
     def __init__(self, frame):
         self.frame = frame
 
     def load_book_data(self):
-        """
-        Fetches metadata, file list, and saved playback state for the current book ID.
-        Populates the PlayerFrame's state variables.
-        """
         frame = self.frame
         try:
-            # Load Title
             if not frame.book_title:
                 details = db_manager.get_book_details(frame.book_id)
                 frame.book_title = details['title'] if details else _("Unknown Book")
@@ -37,7 +26,6 @@ class BookLoader:
             if frame.title_text:
                 frame.title_text.SetLabel(frame.book_title)
 
-            # Load Files
             frame.book_files_data = db_manager.get_book_files(frame.book_id)
             if not frame.book_files_data:
                 raise ValueError(f"No playable files found for book_id {frame.book_id}")
@@ -45,7 +33,6 @@ class BookLoader:
             frame.book_file_durations = [duration for (_, _, _, duration) in frame.book_files_data]
             frame.total_book_duration_ms = sum(frame.book_file_durations)
 
-            # Load Playback State
             state = db_manager.get_playback_state(frame.book_id)
 
             file_index = 0
@@ -61,16 +48,21 @@ class BookLoader:
                 eq_settings = state.get('last_eq_settings', eq_settings)
                 is_eq_enabled = state.get('is_eq_enabled', is_eq_enabled)
 
-                # Apply "Rewind on Resume" preference
                 try:
-                    rewind_str = db_manager.get_setting('resume_rewind_ms')
-                    rewind_ms = int(rewind_str) if rewind_str else 0
-                    if rewind_ms > 0 and start_pos_ms > 0:
-                        start_pos_ms = max(0, start_pos_ms - rewind_ms)
-                except ValueError:
-                    pass
+                    threshold_sec = int(db_manager.get_setting('smart_resume_threshold_sec') or 300)
+                    rewind_ms = int(db_manager.get_setting('smart_resume_rewind_ms') or 0)
+                    last_played_str = state.get('last_played_at')
 
-            # Validate File Index
+                    if rewind_ms > 0 and start_pos_ms > 0 and last_played_str:
+                        last_played_dt = datetime.strptime(last_played_str, '%Y-%m-%d %H:%M:%S.%f')
+                        diff_seconds = (datetime.now() - last_played_dt).total_seconds()
+
+                        if diff_seconds > threshold_sec:
+                            start_pos_ms = max(0, start_pos_ms - rewind_ms)
+                            logging.info(f"Smart Rewind applied: {rewind_ms}ms back.")
+                except Exception as e:
+                    logging.warning(f"Could not apply smart rewind: {e}")
+
             if not (0 <= file_index < len(frame.book_files_data)):
                 logging.warning(f"Saved file index {file_index} out of bounds. Resetting to 0.")
                 file_index = 0
@@ -78,21 +70,18 @@ class BookLoader:
 
             frame.current_file_index = file_index
 
-            # Load Current File Details
             try:
                 frame.current_file_duration_ms = frame.book_file_durations[file_index]
                 (frame.current_file_id, frame.current_file_path, _, _) = frame.book_files_data[file_index]
             except IndexError:
                 raise ValueError(f"Critical index error: Could not retrieve file at index {file_index}")
 
-            # Apply State to Frame
             frame.start_pos_ms = start_pos_ms
             frame.current_target_rate = start_rate
             frame.previous_target_rate = frame.current_target_rate
             frame.current_eq_settings = eq_settings
             frame.is_eq_enabled = is_eq_enabled
 
-            # Update UI
             if frame.nvda_focus_label and frame.current_file_path:
                 file_name = os.path.basename(frame.current_file_path)
                 frame.nvda_focus_label.SetLabel(file_name)
@@ -106,7 +95,6 @@ class BookLoader:
             wx.CallAfter(lambda: event_handlers.on_escape(frame, None))
 
     def start_playback(self):
-        """Constructs the playlist and starts the engine."""
         frame = self.frame
         if frame.is_exiting or not frame.engine:
             return
@@ -156,7 +144,6 @@ class BookLoader:
             wx.CallAfter(lambda: event_handlers.on_escape(frame, None))
 
     def _clear_current_book_state(self):
-        """Resets the frame's internal state variables to defaults."""
         frame = self.frame
         frame.book_id = -1
         frame.book_title = ""
@@ -179,14 +166,6 @@ class BookLoader:
         frame.is_eq_enabled = False
 
     def load_new_book(self, new_book_id: int, new_book_title: str):
-        """
-        Switches context to a new book.
-        Saves the state of the current book, clears memory, and loads the new book.
-
-        Args:
-            new_book_id: ID of the new book.
-            new_book_title: Title of the new book.
-        """
         frame = self.frame
         if frame.is_exiting:
             return
@@ -200,7 +179,6 @@ class BookLoader:
             except Exception as e:
                 logging.warning(f"Could not get time for saving old book: {e}")
 
-            # Update history list in main window if we played enough
             if current_time > 60000:
                 if frame.parent_frame and hasattr(frame.parent_frame, 'update_history_list'):
                     wx.CallAfter(frame.parent_frame.update_history_list)
