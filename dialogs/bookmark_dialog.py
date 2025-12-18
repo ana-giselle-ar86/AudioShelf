@@ -24,7 +24,7 @@ class BookmarkDialog(wx.Dialog):
         self.main_sizer.Add(self.title_text, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
 
         note_label = wx.StaticText(self.panel, label=_("&Note (Optional):"))
-        self.note_text = wx.TextCtrl(self.panel, value=note, style=wx.TE_MULTILINE | wx.TE_PROCESS_ENTER, size=(-1, 150))
+        self.note_text = wx.TextCtrl(self.panel, value=note, style=wx.TE_MULTILINE, size=(-1, 150))
 
         self.main_sizer.Add(note_label, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 10)
         self.main_sizer.Add(self.note_text, 1, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 10)
@@ -46,24 +46,20 @@ class BookmarkDialog(wx.Dialog):
         self.SetMinSize(self.GetSize())
         self.CentreOnParent()
 
-        self.SetDefaultItem(self.ok_button)
-
         self.ok_button.Bind(wx.EVT_BUTTON, self.on_ok)
         self.cancel_button.Bind(wx.EVT_BUTTON, self.on_cancel)
-        self.title_text.Bind(wx.EVT_TEXT_ENTER, self.on_ok)
-        self.note_text.Bind(wx.EVT_KEY_DOWN, self.on_note_key_down)
+        self.title_text.Bind(wx.EVT_TEXT_ENTER, self.on_title_enter)
+        self.title_text.Bind(wx.EVT_KEY_DOWN, self.on_text_key_down)
+        self.note_text.Bind(wx.EVT_KEY_DOWN, self.on_text_key_down)
 
-    def on_note_key_down(self, event: wx.KeyEvent):
-        """
-        Handles key presses in the multiline note field.
-        Enter submits the dialog; Ctrl+Enter inserts a new line.
-        """
-        if event.GetKeyCode() == wx.WXK_RETURN:
-            if event.ControlDown():
-                event.Skip()
-            else:
-                self.on_ok(None)
-                return
+    def on_title_enter(self, event):
+        """Moves focus to the note field when Enter is pressed in the title field."""
+        self.note_text.SetFocus()
+
+    def on_text_key_down(self, event):
+        """Handle Ctrl+Enter to submit the dialog."""
+        if event.GetKeyCode() == wx.WXK_RETURN and event.ControlDown():
+            self.on_ok(None)
         else:
             event.Skip()
 
