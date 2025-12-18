@@ -10,13 +10,12 @@ from typing import Optional, Dict, Any
 from database import db_manager
 from db_layer.helpers import get_book_size_on_disk
 from i18n import _
-from utils import format_time
+from utils import format_time_spoken
 
 SizeResultEvent, EVT_SIZE_RESULT = wx.lib.newevent.NewEvent()
 
 
 def format_size(size_bytes: Optional[int]) -> str:
-    """Converts bytes to human readable string."""
     if size_bytes is None:
         return _("Calculating...")
     if size_bytes < 1024:
@@ -30,10 +29,6 @@ def format_size(size_bytes: Optional[int]) -> str:
 
 
 class PropertiesDialog(wx.Dialog):
-    """
-    Displays detailed properties of a book using a simple, accessible TextCtrl.
-    """
-
     def __init__(self, parent, book_id: int):
         super(PropertiesDialog, self).__init__(parent, title=_("Book Properties"), size=(500, 450))
 
@@ -70,7 +65,6 @@ class PropertiesDialog(wx.Dialog):
         self.text_ctrl.SetFocus()
 
     def _load_data(self):
-        """Fetches all required data from DB."""
         details = db_manager.get_book_details(self.book_id)
         if not details:
             self.book_data = {"title": _("Error Loading Book")}
@@ -91,12 +85,18 @@ class PropertiesDialog(wx.Dialog):
         file_count = len(files)
         total_duration_ms = sum(f[3] for f in files if f[3])
 
+        if file_count == 1:
+            file_count_str = f"1 {_('file')}"
+        else:
+            file_count_str = f"{file_count} {_('files')}"
+
         playback = db_manager.get_playback_state(self.book_id)
         progress_str = _("Not started")
+        
         if playback and file_count > 0:
             idx = playback.get('last_file_index', 0)
             pct = int(((idx + 1) / file_count) * 100)
-            progress_str = f"{pct}% ({_('File')} {idx + 1}/{file_count})"
+            progress_str = f"{pct}% ({_('File')} {idx + 1} {_('of')} {file_count})"
 
         if details.get('is_finished'):
             progress_str = _("Finished")
@@ -108,15 +108,14 @@ class PropertiesDialog(wx.Dialog):
             "title": details.get('title', _("Unknown Title")),
             "path": self.book_path,
             "shelf": shelf_name,
-            "files": file_count,
-            "duration": format_time(total_duration_ms),
+            "files": file_count_str,
+            "duration": format_time_spoken(total_duration_ms),
             "progress": progress_str,
             "last_played": last_played_str,
             "status": _("Pinned") if details.get('is_pinned') else _("Normal")
         }
 
     def _update_text_content(self):
-        """Formats the data into a plain text string and sets it to the control."""
         size_str = format_size(self.book_size)
         d = self.book_data
 

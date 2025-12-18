@@ -27,21 +27,39 @@ def format_time(ms: int) -> str:
 
 def format_time_spoken(ms: int) -> str:
     """
-    Converts milliseconds to a spoken string (e.g., "5 minutes", "30 seconds").
+    Converts milliseconds to a spoken string (e.g., "1 hour, 5 minutes").
+    Handles singular/plural forms correctly.
     """
-    seconds = ms // 1000
-    hours, remainder = divmod(seconds, 3600)
-    minutes, secs = divmod(remainder, 60)
+    if ms < 0: ms = 0
+    total_seconds = ms // 1000
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
 
     parts = []
+
+    # Handle Hours
     if hours > 0:
-        parts.append(_("{0} hours").format(hours))
+        if hours == 1:
+            parts.append(_("{0} hour").format(hours))
+        else:
+            parts.append(_("{0} hours").format(hours))
+
+    # Handle Minutes
     if minutes > 0:
-        parts.append(_("{0} minutes").format(minutes))
-    if secs > 0 or (hours == 0 and minutes == 0):
-        parts.append(_("{0} seconds").format(secs))
+        if minutes == 1:
+            parts.append(_("{0} minute").format(minutes))
+        else:
+            parts.append(_("{0} minutes").format(minutes))
+
+    # Handle Seconds (Show if seconds > 0 OR if the total time is 0)
+    if seconds > 0 or not parts:
+        if seconds == 1:
+            parts.append(_("{0} second").format(seconds))
+        else:
+            parts.append(_("{0} seconds").format(seconds))
     
-    return " ".join(parts)
+    # Use comma for better speech pauses
+    return ", ".join(parts)
 
 
 class SleepTimer:

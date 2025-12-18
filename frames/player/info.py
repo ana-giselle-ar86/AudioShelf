@@ -7,7 +7,7 @@ import os
 import logging
 from i18n import _
 from nvda_controller import speak, LEVEL_MINIMAL, LEVEL_CRITICAL
-from utils import format_time
+from utils import format_time, format_time_spoken
 
 
 class InfoManager:
@@ -18,33 +18,6 @@ class InfoManager:
 
     def __init__(self, frame):
         self.frame = frame
-
-    def _get_spoken_duration(self, ms):
-        """Helper to convert ms to spoken string like '2 hours, 5 minutes'."""
-        if ms < 0: ms = 0
-        total_seconds = int(ms / 1000)
-        hours = total_seconds // 3600
-        minutes = (total_seconds % 3600) // 60
-        seconds = total_seconds % 60
-
-        parts = []
-        
-        # Handle Hours
-        if hours > 0:
-            label = "hour" if hours == 1 else "hours"
-            parts.append(f"{hours} {label}")
-        
-        # Handle Minutes (Always show unless 0 and we have hours, but user wants detail)
-        if minutes > 0:
-            label = "minute" if minutes == 1 else "minutes"
-            parts.append(f"{minutes} {label}")
-            
-        # Handle Seconds (Show if it's the only thing, or generally for precision)
-        if seconds > 0 or not parts:
-            label = "second" if seconds == 1 else "seconds"
-            parts.append(f"{seconds} {label}")
-
-        return ", ".join(parts)
 
     def announce_time(self, should_speak_time: bool):
         """
@@ -63,8 +36,8 @@ class InfoManager:
             wx.CallAfter(self._update_time_label, time_str_visual)
             
             if should_speak_time:
-                spoken_current = self._get_spoken_duration(current_ms)
-                spoken_total = self._get_spoken_duration(total_ms)
+                spoken_current = format_time_spoken(current_ms)
+                spoken_total = format_time_spoken(total_ms)
                 # Spoken: "You have listened to 5 minutes of 10 minutes"
                 msg = _("You have listened to {0} of {1}").format(spoken_current, spoken_total)
                 speak(msg, LEVEL_CRITICAL)
@@ -111,8 +84,8 @@ class InfoManager:
             current_ms = self.frame.engine.get_time()
             remaining_ms = max(0, total_ms - current_ms)
             
-            spoken_remaining = self._get_spoken_duration(remaining_ms)
-            spoken_total = self._get_spoken_duration(total_ms)
+            spoken_remaining = format_time_spoken(remaining_ms)
+            spoken_total = format_time_spoken(total_ms)
 
             # Spoken: "5 minutes remaining of 10 minutes"
             speak(_("{0} remaining of {1}").format(spoken_remaining, spoken_total), LEVEL_CRITICAL)
@@ -141,7 +114,7 @@ class InfoManager:
             real_remaining_ms = max(0, total_ms - current_ms)
             adjusted_remaining_ms = int(real_remaining_ms / current_rate)
 
-            spoken_adjusted = self._get_spoken_duration(adjusted_remaining_ms)
+            spoken_adjusted = format_time_spoken(adjusted_remaining_ms)
             
             # Spoken: "3 minutes remaining at current speed"
             speak(_("{0} remaining at current speed").format(spoken_adjusted), LEVEL_CRITICAL)
@@ -214,8 +187,8 @@ class InfoManager:
             elapsed_ms = self._calculate_total_elapsed_ms()
             total_ms = self.frame.total_book_duration_ms
             
-            spoken_elapsed = self._get_spoken_duration(elapsed_ms)
-            spoken_total = self._get_spoken_duration(total_ms)
+            spoken_elapsed = format_time_spoken(elapsed_ms)
+            spoken_total = format_time_spoken(total_ms)
 
             msg = _("You have listened to {0} of {1}").format(spoken_elapsed, spoken_total)
             speak(msg, LEVEL_CRITICAL)
@@ -233,8 +206,8 @@ class InfoManager:
             total_ms = self.frame.total_book_duration_ms
             remaining_ms = max(0, total_ms - elapsed_ms)
             
-            spoken_remaining = self._get_spoken_duration(remaining_ms)
-            spoken_total = self._get_spoken_duration(total_ms)
+            spoken_remaining = format_time_spoken(remaining_ms)
+            spoken_total = format_time_spoken(total_ms)
 
             msg = _("{0} remaining of {1}").format(spoken_remaining, spoken_total)
             speak(msg, LEVEL_CRITICAL)
@@ -258,7 +231,7 @@ class InfoManager:
             real_remaining_ms = max(0, total_ms - elapsed_ms)
             adjusted_remaining_ms = int(real_remaining_ms / current_rate)
             
-            spoken_adjusted = self._get_spoken_duration(adjusted_remaining_ms)
+            spoken_adjusted = format_time_spoken(adjusted_remaining_ms)
 
             speak(_("{0} remaining of book at current speed").format(spoken_adjusted), LEVEL_CRITICAL)
         except Exception as e:
