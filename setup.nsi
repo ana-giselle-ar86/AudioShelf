@@ -1,8 +1,7 @@
-; -----------------------------------------------------------------
-; --- NSIS Script for AudioShelf ---
-; -----------------------------------------------------------------
-
 !include "x64.nsh"
+!include "MUI2.nsh"
+!include "LogicLib.nsh"
+!include "nsDialogs.nsh"
 
 !define COMPANY_NAME "Mehdi Rajabi"
 !define APP_NAME "AudioShelf"
@@ -12,29 +11,27 @@
 !define APP_EXE_NAME "audioshelf.exe"
 !define SOURCE_DIR "dist\audioshelf"
 
-; --- Compression ---
 SetCompressor /SOLID lzma
 SetCompressorDictSize 64
 
-; --- Main Settings ---
 Name "${APP_NAME} ${APP_VERSION}"
 OutFile "AudioShelf-${APP_VERSION}-Win64-Setup.exe"
 InstallDir "$PROGRAMFILES64\${APP_NAME}"
 InstallDirRegKey HKLM "Software\${APP_NAME}" "Install_Dir"
 RequestExecutionLevel admin
 
-; --- Modern UI 2 ---
-!include "MUI2.nsh"
-!include "LogicLib.nsh"
+ShowInstDetails hide
+ShowUninstDetails hide
 
-; --- Interface Settings ---
+Var hRemoveDataCheckbox
+Var bRemoveDataState
+
 !define MUI_ABORTWARNING
 !define MUI_ICON "AudioShelf.ico" 
 !define MUI_UNICON "AudioShelf.ico"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 
-; --- Pages ---
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
@@ -47,14 +44,12 @@ RequestExecutionLevel admin
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION CreateDesktopShortcut
 !insertmacro MUI_PAGE_FINISH
 
-!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_WELCOME
+UninstPage custom un.AskRemoveDataPage un.AskRemoveDataPageLeave
 !insertmacro MUI_UNPAGE_INSTFILES
 
 !insertmacro MUI_LANGUAGE "English"
 
-; -----------------------------------------------------------------
-; --- Functions ---
-; -----------------------------------------------------------------
 Function .onInit
   ${If} ${RunningX64}
     SetRegView 64
@@ -62,20 +57,60 @@ Function .onInit
   ${EndIf}
 FunctionEnd
 
+Function un.onInit
+  ${If} ${RunningX64}
+    SetRegView 64
+  ${EndIf}
+  ReadRegStr $INSTDIR HKLM "Software\${APP_NAME}" "Install_Dir"
+FunctionEnd
+
 Function CreateDesktopShortcut
   SetShellVarContext all
   CreateShortcut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE_NAME}"
 FunctionEnd
 
-; -----------------------------------------------------------------
-; --- Installer Section ---
-; -----------------------------------------------------------------
+Function un.AskRemoveDataPage
+  nsDialogs::Create 1018
+  Pop $0
+  ${If} $0 == error
+    Abort
+  ${EndIf}
+
+  GetDlgItem $0 $hwndParent 1
+  SendMessage $0 ${WM_SETTEXT} 0 "STR:Uninstall"
+
+  ${NSD_CreateLabel} 0 0 100% 25u "Do you want to delete all your personal data (History, Bookmarks, Settings)?"
+  Pop $0
+
+  ${NSD_CreateCheckbox} 0 35u 100% 10u "Yes, delete all my User Data (History, Bookmarks, Settings)"
+  Pop $hRemoveDataCheckbox
+
+  SendMessage $hwndParent 0x0028 $hRemoveDataCheckbox 1
+
+  nsDialogs::Show
+FunctionEnd
+
+Function un.AskRemoveDataPageLeave
+  ${NSD_GetState} $hRemoveDataCheckbox $bRemoveDataState
+FunctionEnd
+
 Section "Install" SecInstall
   SetOutPath "$INSTDIR"
   
+  RMDir /r "$INSTDIR\_libs"
+  RMDir /r "$INSTDIR\_internal"
+  RMDir /r "$INSTDIR\lib"
+  RMDir /r "$INSTDIR\mpl-data"
+  RMDir /r "$INSTDIR\share"
+  
+  Delete "$INSTDIR\*.dll"
+  Delete "$INSTDIR\*.pyd"
+  Delete "$INSTDIR\*.so"
+  Delete "$INSTDIR\*.exe"
+  Delete "$INSTDIR\base_library.zip"
+  
   WriteRegStr HKLM "Software\${APP_NAME}" "Install_Dir" "$INSTDIR"
   
-  DetailPrint "Installing application files..."
   File /r /x ".portable" /x "*.log" /x "user_data" "${SOURCE_DIR}\*.*"
   
   SetShellVarContext all
@@ -83,8 +118,10 @@ Section "Install" SecInstall
   CreateShortcut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE_NAME}"
   CreateShortcut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 
-  DetailPrint "Adding context menu entries..."
-  
+  ${If} ${Silent}
+    Call CreateDesktopShortcut
+  ${EndIf}
+
   WriteRegStr HKCR "Directory\shell\AudioShelf" "" "Add to AudioShelf Library"
   WriteRegStr HKCR "Directory\shell\AudioShelf" "Icon" "$INSTDIR\${APP_EXE_NAME}"
   WriteRegStr HKCR "Directory\shell\AudioShelf\command" "" '"$INSTDIR\${APP_EXE_NAME}" "%1"'
@@ -104,9 +141,6 @@ Section "Install" SecInstall
   WriteUninstaller "$INSTDIR\uninstall.exe"
 SectionEnd
 
-; -----------------------------------------------------------------
-; --- Uninstaller Section ---
-; -----------------------------------------------------------------
 Section "Uninstall"
   SetShellVarContext all
 
@@ -116,9 +150,31 @@ Section "Uninstall"
 
   DeleteRegKey HKCR "Directory\shell\AudioShelf"
   DeleteRegKey HKCR "*\shell\AudioShelf"
-
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
   DeleteRegKey HKLM "Software\${APP_NAME}"
 
-  RMDir /r "$INSTDIR"
+  RMDir /r "$INSTDIR\_libs"
+  RMDir /r "$INSTDIR\_internal"
+  RMDir /r "$INSTDIR\lib"
+  RMDir /r "$INSTDIR\mpl-data"
+  RMDir /r "$INSTDIR\share"
+  RMDir /r "$INSTDIR\tcl"
+  
+  Delete "$INSTDIR\*.dll"
+  Delete "$INSTDIR\*.pyd"
+  Delete "$INSTDIR\*.so"
+  Delete "$INSTDIR\*.exe"
+  Delete "$INSTDIR\*.zip"
+  Delete "$INSTDIR\*.dat"
+  Delete "$INSTDIR\*.txt"
+
+  ${If} $bRemoveDataState == ${BST_CHECKED}
+    SetShellVarContext current
+    RMDir /r "$LOCALAPPDATA\${APP_NAME}"
+    SetShellVarContext all
+    Delete "$INSTDIR\*.log"
+    Delete "$INSTDIR\*.json"
+  ${EndIf}
+
+  RMDir "$INSTDIR"
 SectionEnd
