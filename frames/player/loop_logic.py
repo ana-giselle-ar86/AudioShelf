@@ -8,32 +8,41 @@ from nvda_controller import speak, LEVEL_CRITICAL, LEVEL_MINIMAL
 
 
 def set_loop_start(frame):
-    """Sets the A-B loop start point (Point A) at the current playback time."""
     if not frame.engine:
         return
+    
     current_time_ms = frame.engine.get_time()
     frame.loop_point_a_ms = current_time_ms
-    speak(_("Loop start point set"), LEVEL_MINIMAL)
+
+    if hasattr(frame, 'loop_point_b_ms') and frame.loop_point_b_ms is not None:
+        if frame.loop_point_b_ms > current_time_ms:
+            frame.engine.set_loop_a(current_time_ms)
+            frame.engine.set_time(current_time_ms)
+            speak(_("Loop start updated"), LEVEL_MINIMAL)
+        else:
+            frame.loop_point_b_ms = None
+            frame.engine.clear_loop()
+            speak(_("Loop start set, previous end cleared"), LEVEL_MINIMAL)
+    else:
+        speak(_("Loop start point set"), LEVEL_MINIMAL)
 
 
 def set_loop_end(frame):
-    """
-    Sets the A-B loop end point (Point B) and activates the loop.
-    Requires Point A to be set previously.
-    """
     if not frame.engine:
         return
+    
     if frame.loop_point_a_ms is None:
-        speak(_("Error: Loop start point (S) not set"), LEVEL_CRITICAL)
+        speak(_("Error: Loop start point (A) not set"), LEVEL_CRITICAL)
         return
 
     point_a_ms = frame.loop_point_a_ms
     point_b_ms = frame.engine.get_time()
 
-    if point_b_ms < point_a_ms:
+    if point_b_ms <= point_a_ms:
         speak(_("Error: Loop end point must be after start point"), LEVEL_CRITICAL)
         return
 
+    frame.loop_point_b_ms = point_b_ms
     frame.engine.set_loop_a(point_a_ms)
     frame.engine.set_loop_b(point_b_ms)
     frame.engine.set_time(point_a_ms)
@@ -41,11 +50,12 @@ def set_loop_end(frame):
 
 
 def clear_loop(frame):
-    """Deactivates and clears the A-B loop."""
     if not frame.engine:
         return
+    
     frame.engine.clear_loop()
     frame.loop_point_a_ms = None
+    frame.loop_point_b_ms = None
     speak(_("Loop deactivated"), LEVEL_MINIMAL)
 
 
