@@ -1,5 +1,5 @@
 # frames/library/actions/book_actions.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -11,7 +11,7 @@ import logging
 import threading
 
 from database import db_manager
-from i18n import _
+from i18n import _, ngettext
 from nvda_controller import speak, LEVEL_CRITICAL, LEVEL_MINIMAL
 from dialogs import properties_dialog
 from dialogs.confirm_dialog import CheckboxConfirmDialog
@@ -165,12 +165,11 @@ def on_context_delete_book(frame, event, source='library'):
             return
 
     count = len(books_to_delete)
-    if count == 1:
-        msg = _("Are you sure you want to remove '{0}' from your library? (Files will NOT be deleted)").format(
-            books_to_delete[0][1])
-    else:
-        msg = _("Are you sure you want to remove {0} books from your library? (Files will NOT be deleted)").format(
-            count)
+    msg = ngettext(
+        "Are you sure you want to remove '{0}' from your library? (Files will NOT be deleted)",
+        "Are you sure you want to remove {0} books from your library? (Files will NOT be deleted)",
+        count
+    ).format(books_to_delete[0][1] if count == 1 else count)
     
     if wx.MessageBox(msg, _("Confirm Remove"), wx.YES_NO | wx.CANCEL | wx.ICON_WARNING | wx.YES_DEFAULT, parent=frame) != wx.YES:
         return
@@ -180,10 +179,12 @@ def on_context_delete_book(frame, event, source='library'):
             db_manager.book_repo.delete_book(book_id)
             logging.info(f"Deleted book: {book_title} (ID: {book_id})")
 
-        if count == 1:
-            speak(_("Book removed from library."), LEVEL_CRITICAL)
-        else:
-            speak(_("{0} books removed from library.").format(count), LEVEL_CRITICAL)
+        msg_success = ngettext(
+            "Book removed from library.",
+            "{0} books removed from library.",
+            count
+        ).format(count)
+        speak(msg_success, LEVEL_CRITICAL)
             
         action_utils.refresh_all_views(frame)
 
@@ -204,11 +205,11 @@ def on_context_delete_computer(frame, event, source='library'):
     count = len(books_to_delete)
     
 # Create a warning message
-    if count == 1:
-        book_title = books_to_delete[0][1]
-        msg = _("WARNING: You are about to permanently delete '{0}' and all its files from your computer.\nThis action CANNOT be undone.").format(book_title)
-    else:
-        msg = _("WARNING: You are about to permanently delete {0} books and all their files from your computer.\nThis action CANNOT be undone.").format(count)
+    msg = ngettext(
+        "WARNING: You are about to permanently delete '{0}' and all its files from your computer.\nThis action CANNOT be undone.",
+        "WARNING: You are about to permanently delete {0} books and all their files from your computer.\nThis action CANNOT be undone.",
+        count
+    ).format(books_to_delete[0][1] if count == 1 else count)
 
 # Show new dialog
     dlg = CheckboxConfirmDialog(
@@ -251,10 +252,20 @@ def on_context_delete_computer(frame, event, source='library'):
                 logging.warning(f"Path not found for {book_title}, removing from DB only.")
 
         if deleted_count > 0:
-            speak(_("{0} books deleted permanently.").format(deleted_count), LEVEL_CRITICAL)
+            msg_success = ngettext(
+                "{0} book deleted permanently.",
+                "{0} books deleted permanently.",
+                deleted_count
+            ).format(deleted_count)
+            speak(msg_success, LEVEL_CRITICAL)
             
         if failed_count > 0:
-            speak(_("{0} books failed to delete.").format(failed_count), LEVEL_CRITICAL)
+            msg_fail = ngettext(
+                "{0} book failed to delete.",
+                "{0} books failed to delete.",
+                failed_count
+            ).format(failed_count)
+            speak(msg_fail, LEVEL_CRITICAL)
 
         action_utils.refresh_all_views(frame)
 
@@ -296,10 +307,12 @@ def on_context_pin_book(frame, event, source='library'):
             _pin_book_logic(frame, book_id)
         
         count = len(books_to_pin)
-        if count == 1:
-            speak(_("Book pinned."), LEVEL_CRITICAL)
-        else:
-            speak(_("{0} books pinned.").format(count), LEVEL_CRITICAL)
+        msg = ngettext(
+            "Book pinned.",
+            "{0} books pinned.",
+            count
+        ).format(count)
+        speak(msg, LEVEL_CRITICAL)
             
         action_utils.refresh_all_views(frame)
     except Exception:
@@ -320,10 +333,12 @@ def on_context_unpin_book(frame, event, source='library'):
             _unpin_book_logic(frame, book_id)
         
         count = len(books_to_unpin)
-        if count == 1:
-            speak(_("Book unpinned."), LEVEL_CRITICAL)
-        else:
-            speak(_("{0} books unpinned.").format(count), LEVEL_CRITICAL)
+        msg = ngettext(
+            "Book unpinned.",
+            "{0} books unpinned.",
+            count
+        ).format(count)
+        speak(msg, LEVEL_CRITICAL)
             
         action_utils.refresh_all_views(frame)
     except Exception:
@@ -352,10 +367,12 @@ def on_context_mark_finished(frame, event, source='library'):
             _set_finished_status_logic(frame, book_id, True)
         
         count = len(books_to_mark)
-        if count == 1:
-            speak(_("Marked as finished."), LEVEL_CRITICAL)
-        else:
-            speak(_("{0} books marked as finished.").format(count), LEVEL_CRITICAL)
+        msg = ngettext(
+            "Marked as finished.",
+            "{0} books marked as finished.",
+            count
+        ).format(count)
+        speak(msg, LEVEL_CRITICAL)
         
         action_utils.refresh_all_views(frame)
     except Exception:
@@ -376,10 +393,12 @@ def on_context_mark_unfinished(frame, event, source='library'):
             _set_finished_status_logic(frame, book_id, False)
         
         count = len(books_to_mark)
-        if count == 1:
-            speak(_("Marked as unfinished."), LEVEL_CRITICAL)
-        else:
-            speak(_("{0} books marked as unfinished.").format(count), LEVEL_CRITICAL)
+        msg = ngettext(
+            "Marked as unfinished.",
+            "{0} books marked as unfinished.",
+            count
+        ).format(count)
+        speak(msg, LEVEL_CRITICAL)
         
         action_utils.refresh_all_views(frame)
     except Exception:

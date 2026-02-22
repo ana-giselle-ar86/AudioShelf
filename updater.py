@@ -1,5 +1,5 @@
 # updater.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -16,6 +16,7 @@ import re
 import zipfile
 import time
 import shutil
+from i18n import _
 
 # Configuration
 REPO_OWNER = "M-Rajabi-Dev"
@@ -126,7 +127,7 @@ class UpdateManager:
                 has_update=is_newer and (download_url is not None),
                 latest_version=latest_version,
                 download_url=download_url,
-                error_msg=None if download_url else "No matching update file found.",
+                error_msg=None if download_url else _("No matching update file found."),
                 silent=silent_if_up_to_date,
                 is_portable=self.is_portable
             ))
@@ -213,12 +214,9 @@ class UpdateManager:
             sys.exit(0)
         except Exception as e:
             logging.error(f"Failed to launch installer: {e}", exc_info=True)
-            wx.MessageBox(f"Failed to launch installer:\n{e}", "Error", wx.OK | wx.ICON_ERROR)
+            wx.MessageBox(_("Failed to launch installer:\n{0}").format(e), _("Error"), wx.OK | wx.ICON_ERROR)
 
     def _perform_portable_update(self, zip_path: str):
-        """
-        Extracts the update and creates a script to swap files after exit.
-        """
         try:
             temp_extract_dir = os.path.join(tempfile.gettempdir(), f"audioshelf_update_{int(time.time())}")
             os.makedirs(temp_extract_dir, exist_ok=True)
@@ -229,7 +227,6 @@ class UpdateManager:
 
             current_app_dir = os.path.dirname(sys.executable)
             
-            # Handle single root folder in zip
             extracted_items = os.listdir(temp_extract_dir)
             if len(extracted_items) == 1 and os.path.isdir(os.path.join(temp_extract_dir, extracted_items[0])):
                 source_dir = os.path.join(temp_extract_dir, extracted_items[0])
@@ -246,7 +243,7 @@ echo Waiting for AudioShelf to close...
 timeout /t 3 /nobreak >nul
 
 echo Updating files...
-xcopy "{source_dir}\\*" "{current_app_dir}\\" /E /H /Y /Q
+robocopy "{source_dir}" "{current_app_dir}" /MIR /Z /R:5 /W:1 /XF AudioShelf.db AudioShelf.log .portable /XD user_data
 
 echo Cleaning up...
 rmdir /s /q "{temp_extract_dir}"
@@ -268,4 +265,4 @@ exit
 
         except Exception as e:
             logging.error(f"Portable update failed: {e}", exc_info=True)
-            wx.MessageBox(f"Portable update failed:\n{e}", "Error", wx.OK | wx.ICON_ERROR)
+            wx.MessageBox(_("Portable update failed:\n{0}").format(e), _("Error"), wx.OK | wx.ICON_ERROR)

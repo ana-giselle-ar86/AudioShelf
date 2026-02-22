@@ -1,12 +1,12 @@
 # frames/library/actions/shelf_actions.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
 import logging
 import sqlite3
 from database import db_manager
-from i18n import _
+from i18n import _, ngettext
 from nvda_controller import speak, LEVEL_CRITICAL, LEVEL_MINIMAL
 from . import action_utils
 
@@ -124,11 +124,11 @@ def on_context_delete_shelf(frame, event, source='library'):
         return
 
     count = len(valid_shelves)
-    if count == 1:
-        msg = _("Are you sure you want to delete shelf '{0}'? This only works if the shelf is empty.").format(
-            valid_shelves[0][1])
-    else:
-        msg = _("Are you sure you want to delete {0} shelves? Only empty shelves will be deleted.").format(count)
+    msg = ngettext(
+        "Are you sure you want to delete shelf '{0}'? This only works if the shelf is empty.",
+        "Are you sure you want to delete {0} shelves? Only empty shelves will be deleted.",
+        count
+    ).format(valid_shelves[0][1] if count == 1 else count)
 
     if wx.MessageBox(msg, _("Confirm Delete"), wx.YES_NO | wx.CANCEL | wx.ICON_WARNING | wx.YES_DEFAULT, parent=frame) != wx.YES:
         return
@@ -149,10 +149,19 @@ def on_context_delete_shelf(frame, event, source='library'):
 
         if deleted_count > 0:
             if failed_count > 0:
-                speak(_("{0} shelves deleted. {1} failed (not empty).").format(deleted_count, failed_count),
-                      LEVEL_CRITICAL)
+                msg_success = ngettext(
+                    "1 shelf deleted. {1} failed (not empty).",
+                    "{0} shelves deleted. {1} failed (not empty).",
+                    deleted_count
+                ).format(deleted_count, failed_count)
             else:
-                speak(_("{0} shelves deleted.").format(deleted_count), LEVEL_CRITICAL)
+                msg_success = ngettext(
+                    "1 shelf deleted.",
+                    "{0} shelves deleted.",
+                    deleted_count
+                ).format(deleted_count)
+                
+            speak(msg_success, LEVEL_CRITICAL)
             action_utils.refresh_all_views(frame)
         else:
             if failed_count > 0:

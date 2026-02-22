@@ -1,5 +1,5 @@
 # frames/library/list_manager.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -73,7 +73,7 @@ class LibraryListManager:
         if not self._is_virtual_shelf_hidden("virtual_pinned"):
             ordered_shelves.append(('virtual_pinned', _("Pinned Books")))
         for (sid, sname, _ignored) in frame.shelves_data:
-            ordered_shelves.append((sid, sname))
+            ordered_shelves.append((sid, _(sname)))
         if not self._is_virtual_shelf_hidden("virtual_all_books"):
             ordered_shelves.append(('virtual_all_books', _("All Books")))
         if not self._is_virtual_shelf_hidden("virtual_finished"):
@@ -136,7 +136,7 @@ class LibraryListManager:
                                 book_matches = True
                                 break
                     if shelf_matches or book_matches:
-                        label = f"{shelf_name} ({len(books)}) [{_('Shelf')}]"
+                        label = _("{0} ({1}) [{2}]").format(shelf_name, len(books), _("Shelf"))
                         add_item(label, 'shelf', shelf_id)
                         items_added += 1
 
@@ -144,14 +144,14 @@ class LibraryListManager:
                 if not self._is_virtual_shelf_hidden("virtual_all_books"):
                     count = len(frame.all_books_data)
                     if not filter_lower or filter_lower in _("All Books").lower():
-                        label = f"{_('All Books')} ({count}) [{_('Virtual Shelf')}]"
+                        label = _("{0} ({1}) [{2}]").format(_('All Books'), count, _('Virtual Shelf'))
                         add_item(label, 'virtual_shelf', 'virtual_all_books')
                         items_added += 1
 
                 if not self._is_virtual_shelf_hidden("virtual_finished"):
                     count = len(frame.finished_books) if hasattr(frame, 'finished_books') else 0
                     if not filter_lower or filter_lower in _("Finished Books").lower():
-                        label = f"{_('Finished Books')} ({count}) [{_('Virtual Shelf')}]"
+                        label = _("{0} ({1}) [{2}]").format(_('Finished Books'), count, _('Virtual Shelf'))
                         add_item(label, 'virtual_shelf', 'virtual_finished')
                         items_added += 1
 

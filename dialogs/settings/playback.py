@@ -1,5 +1,5 @@
 # dialogs/settings/playback.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -26,35 +26,24 @@ EOD_ACTIONS = {
 }
 EOD_ACTIONS_REV = {v: k for k, v in EOD_ACTIONS.items()}
 
+MS_PER_SEC = 1000
+MS_PER_MIN = 60000
+
 SMART_THRESHOLD_OPTIONS = [
     (0, _("Always (Disabled Threshold)")),
-    (60, _("1 minute")),
-    (120, _("2 minutes")),
-    (300, _("5 minutes")),
-    (600, _("10 minutes")),
-    (1800, _("30 minutes")),
-    (3600, _("1 hour")),
+    (60, _("{0} minute").format(1)),
+    (120, _("{0} minutes").format(2)),
+    (300, _("{0} minutes").format(5)),
+    (600, _("{0} minutes").format(10)),
+    (900, _("{0} minutes").format(15)),
+    (1800, _("{0} minutes").format(30)),
+    (3600, _("{0} hour").format(1)),
 ]
 
-SMART_REWIND_OPTIONS = [
-    (0, _("Disabled")),
-    (5000, _("5 seconds")),
-    (10000, _("10 seconds")),
-    (15000, _("15 seconds")),
-    (20000, _("20 seconds")),
-    (30000, _("30 seconds")),
-    (60000, _("1 minute")),
-    (120000, _("2 minutes")),
-    (180000, _("3 minutes")),
-    (240000, _("4 minutes")),
-    (300000, _("5 minutes")),
-    (360000, _("6 minutes")),
-    (420000, _("7 minutes")),
-    (480000, _("8 minutes")),
-    (540000, _("9 minutes")),
-    (600000, _("10 minutes")),
-    (900000, _("15 minutes")),
-]
+SMART_REWIND_OPTIONS = [(0, _("Disabled"))]
+SMART_REWIND_OPTIONS += [(s * MS_PER_SEC, _("{0} seconds").format(s)) for s in [5, 10, 15, 20, 30]]
+SMART_REWIND_OPTIONS += [(m * MS_PER_MIN, _("{0} minutes").format(m)) for m in range(1, 11)]
+SMART_REWIND_OPTIONS += [(15 * MS_PER_MIN, _("{0} minutes").format(15))]
 
 class TabPanel(wx.Panel):
     def __init__(self, parent):
@@ -62,7 +51,7 @@ class TabPanel(wx.Panel):
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # 1. Auto-Rewind Section
+        # Auto-Rewind Section
         rewind_box = wx.StaticBox(self, label=_("Auto-Rewind Settings"))
         rewind_box_sizer = wx.StaticBoxSizer(rewind_box, wx.VERTICAL)
 
@@ -89,21 +78,21 @@ class TabPanel(wx.Panel):
         amount_sizer.Add(self.smart_rewind_combo, 0, wx.ALIGN_CENTER_VERTICAL)
         rewind_box_sizer.Add(amount_sizer, 0, wx.ALL, 8)
 
-        # 2. Playback Behavior
+        # Playback Behavior
         playback_box = wx.StaticBox(self, label=_("Playback Behavior"))
         playback_box_sizer = wx.StaticBoxSizer(playback_box, wx.VERTICAL)
 
         self.pause_checkbox = wx.CheckBox(self, label=_("Automatically pause playback when a dialog window opens."))
         playback_box_sizer.Add(self.pause_checkbox, 0, wx.ALL | wx.EXPAND, 8)
 
-        self.resume_on_jump_checkbox = wx.CheckBox(self, label=_("Automatically resume playback after a major jump (Go To, Next File)."))
+        self.resume_on_jump_checkbox = wx.CheckBox(self, label=_("Automatically resume playback after a major jump."))
         playback_box_sizer.Add(self.resume_on_jump_checkbox, 0, wx.ALL | wx.EXPAND, 8)
 
         self.eod_choices = list(EOD_ACTIONS.values())
         self.eod_radio = wx.RadioBox(self, label=_("When the end of a book is reached:"), choices=self.eod_choices, majorDimension=1, style=wx.RA_SPECIFY_COLS)
         playback_box_sizer.Add(self.eod_radio, 0, wx.EXPAND | wx.ALL, 8)
 
-        # 3. Seek Times
+        # Seek Times
         seek_box = wx.StaticBox(self, label=_("Seek Times"))
         seek_sizer = wx.StaticBoxSizer(seek_box, wx.VERTICAL)
         grid_sizer = wx.FlexGridSizer(4, 2, 5, 5)
@@ -158,7 +147,7 @@ class TabPanel(wx.Panel):
         self.smart_rewind_combo.SetSelection(s_r_idx)
 
         current_eod_action = db_manager.get_setting(SETTING_END_OF_BOOK) or 'stop'
-        display_eod_action = EOD_ACTIONS.get(current_eod_action, _("Stop playback"))
+        display_eod_action = EOD_ACTIONS.get(current_eod_action, EOD_ACTIONS['stop'])
         self.eod_radio.SetStringSelection(display_eod_action)
 
         self.seek_fwd_spin.SetValue(self._safe_get_int_setting(SETTING_SEEK_FWD, 30000) // 1000)

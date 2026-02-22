@@ -1,5 +1,5 @@
 # dialogs/about_dialog.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -25,7 +25,6 @@ def get_app_version():
         return "1.0.0"
 
 APP_VERSION = get_app_version()
-COPYRIGHT = "Copyright (c) 2025 Mehdi Rajabi. Released under GNU GPL v3."
 GITHUB_URL = "https://github.com/M-Rajabi-Dev/AudioShelf"
 CONTACT_EMAIL = "mehdi.rajabi.dev@gmail.com"
 
@@ -56,7 +55,14 @@ class AboutDialog(wx.Dialog):
         desc_text = wx.StaticText(self.panel, label=desc_str, style=wx.ALIGN_CENTER)
         desc_text.Wrap(400)
 
-        copy_text = wx.StaticText(self.panel, label=COPYRIGHT)
+        copyright_text = _("Copyright (c) 2025-2026 Mehdi Rajabi. Released under GNU GPL v3.")
+        copy_text = wx.StaticText(self.panel, label=copyright_text)
+        # Translator Credit (Dynamic)
+        translator_name = _("Translator Name")
+        self.trans_text = None
+        if translator_name != "Translator Name":
+            translated_by_label = _("Translated by: {0}").format(translator_name)
+            self.trans_text = wx.StaticText(self.panel, label=translated_by_label)
 
         # Buttons Sizer
         links_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -74,6 +80,8 @@ class AboutDialog(wx.Dialog):
         main_sizer.Add(ver_text, 0, wx.ALIGN_CENTER | wx.TOP, 5)
         main_sizer.Add(desc_text, 0, wx.ALIGN_CENTER | wx.ALL, 20)
         main_sizer.Add(copy_text, 0, wx.ALIGN_CENTER | wx.BOTTOM, 10)
+        if self.trans_text:
+            main_sizer.Add(self.trans_text, 0, wx.ALIGN_CENTER | wx.BOTTOM, 10)
         main_sizer.Add(wx.StaticLine(self.panel), 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
         main_sizer.Add(links_sizer, 0, wx.ALIGN_CENTER | wx.TOP | wx.BOTTOM, 15)
 

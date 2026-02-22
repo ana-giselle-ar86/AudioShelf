@@ -1,5 +1,5 @@
 # frames/player/volume_logic.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0
 
 from i18n import _
@@ -20,7 +20,7 @@ def change_volume(frame, delta: int):
     current_vol = frame.engine.get_volume()
     new_vol = max(0, min(100, current_vol + delta))
     frame.engine.set_volume(new_vol)
-    speak(f"{_('Volume')} {new_vol}%", LEVEL_FULL)
+    speak(_("Volume {0}%").format(new_vol), LEVEL_FULL)
 
 
 def change_system_volume(delta: int):
@@ -39,7 +39,7 @@ def change_system_volume(delta: int):
         interface.SetMasterVolumeLevelScalar(new_vol, None)
         
         final_vol = int(round(new_vol * 100))
-        speak(f"{_('System Volume')} {final_vol}%", LEVEL_FULL)
+        speak(_("System Volume {0}%").format(final_vol), LEVEL_FULL)
         
     except Exception:
-        speak("System Volume Error", LEVEL_CRITICAL)
+        speak(_("System Volume Error"), LEVEL_CRITICAL)

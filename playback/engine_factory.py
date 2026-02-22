@@ -1,10 +1,11 @@
 # playback/engine_factory.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import logging
 import os
 import sys
+from i18n import _
 from typing import Optional
 from .base_engine import BasePlaybackEngine
 from database import db_manager
@@ -58,10 +59,10 @@ def create_engine(hwnd: Optional[int] = None) -> BasePlaybackEngine:
         from .mpv_engine import MpvEngine
         return MpvEngine(hwnd=hwnd)
 
-    except ImportError:
+    except ImportError as e:
         logging.critical("MPV engine failed: python-mpv is not installed or libmpv-2.dll failed to load.",
                          exc_info=True)
-        raise
+        raise RuntimeError(_("The playback engine (libmpv) is not installed or could not be loaded. Please reinstall the application.")) from e
     except Exception as e:
         logging.critical(f"Failed to initialize MpvEngine: {e}", exc_info=True)
-        raise RuntimeError(f"Error initializing MPV: {e}") from e
+        raise RuntimeError(_("An unexpected error occurred while initializing the playback engine: {}").format(e)) from e

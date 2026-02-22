@@ -1,11 +1,11 @@
 # frames/player/info.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
 import os
 import logging
-from i18n import _
+from i18n import _, ngettext
 from nvda_controller import speak, LEVEL_MINIMAL, LEVEL_CRITICAL
 from utils import format_time, format_time_spoken
 
@@ -116,8 +116,8 @@ class InfoManager:
 
             spoken_adjusted = format_time_spoken(adjusted_remaining_ms)
             
-            # Spoken: "3 minutes remaining at current speed"
-            speak(_("{0} remaining at current speed").format(spoken_adjusted), LEVEL_CRITICAL)
+            msg = _("{0} remaining until the end of the file at current speed").format(spoken_adjusted)
+            speak(msg, LEVEL_CRITICAL)
         except Exception as e:
             logging.error(f"Error announcing adjusted remaining file time: {e}", exc_info=True)
 
@@ -233,6 +233,7 @@ class InfoManager:
             
             spoken_adjusted = format_time_spoken(adjusted_remaining_ms)
 
-            speak(_("{0} remaining of book at current speed").format(spoken_adjusted), LEVEL_CRITICAL)
+            msg = _("{0} remaining for the entire book at current speed").format(spoken_adjusted)
+            speak(msg, LEVEL_CRITICAL)
         except Exception as e:
             logging.error(f"Error announcing adjusted total remaining time: {e}", exc_info=True)

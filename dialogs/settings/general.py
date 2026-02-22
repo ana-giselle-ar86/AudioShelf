@@ -1,5 +1,5 @@
 # dialogs/settings/general.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -26,7 +26,13 @@ class TabPanel(wx.Panel):
 
         lang_label = wx.StaticText(self, label=_("Application Language:"))
 
-        lang_choices = [_("English (en)")]
+        lang_choices = [
+            _("English (en)"), 
+            _("Italian (it)"), 
+            _("Persian (fa)"), 
+            _("Serbian (Latin) (sr_Latn)"), 
+            _("Spanish (es)"), 
+        ]
         lang_codes = SUPPORTED_LANGUAGES
 
         self.lang_map = dict(zip(lang_choices, lang_codes))

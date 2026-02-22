@@ -1,5 +1,5 @@
 # playback/mpv_engine.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import mpv
@@ -70,7 +70,7 @@ class MpvEngine(BasePlaybackEngine):
                     "Critical Error: The playback engine (libmpv-2.dll) is missing or incompatible.\nPlease reinstall the application.")) from e
             else:
                 raise RuntimeError(
-                    _("Error: The playback engine could not be initialized.\nDetails: {0}").format(e)) from e
+                    _("The playback engine could not be initialized. Details: {}").format(e)) from e
 
     def _on_file_loaded(self, event):
         """Internal callback triggered when MPV finishes loading a file."""

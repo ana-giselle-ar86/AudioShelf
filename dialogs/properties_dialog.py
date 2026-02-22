@@ -1,5 +1,5 @@
 # dialogs/properties_dialog.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -86,9 +86,10 @@ class PropertiesDialog(wx.Dialog):
         total_duration_ms = sum(f[3] for f in files if f[3])
 
         if file_count == 1:
-            file_count_str = f"1 {_('file')}"
+            file_count_str = _("1 file")
         else:
-            file_count_str = f"{file_count} {_('files')}"
+            file_count_str = _("{0} files").format(file_count)
+
 
         playback = db_manager.get_playback_state(self.book_id)
         progress_str = _("Not started")

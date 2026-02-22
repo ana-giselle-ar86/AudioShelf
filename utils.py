@@ -1,5 +1,5 @@
 # utils.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -9,7 +9,7 @@ import logging
 import datetime
 import subprocess
 from typing import Optional, List, TYPE_CHECKING
-from i18n import _
+from i18n import _, ngettext
 
 if TYPE_CHECKING:
     from frames.player_frame import PlayerFrame
@@ -39,26 +39,16 @@ def format_time_spoken(ms: int) -> str:
 
     # Handle Hours
     if hours > 0:
-        if hours == 1:
-            parts.append(_("{0} hour").format(hours))
-        else:
-            parts.append(_("{0} hours").format(hours))
+            parts.append(ngettext("1 hour", "{0} hours", hours).format(hours))
 
     # Handle Minutes
     if minutes > 0:
-        if minutes == 1:
-            parts.append(_("{0} minute").format(minutes))
-        else:
-            parts.append(_("{0} minutes").format(minutes))
+            parts.append(ngettext("1 minute", "{0} minutes", minutes).format(minutes))
 
     # Handle Seconds (Show if seconds > 0 OR if the total time is 0)
     if seconds > 0 or not parts:
-        if seconds == 1:
-            parts.append(_("{0} second").format(seconds))
-        else:
-            parts.append(_("{0} seconds").format(seconds))
+            parts.append(ngettext("1 second", "{0} seconds", seconds).format(seconds))
     
-    # Use comma for better speech pauses
     return ", ".join(parts)
 
 

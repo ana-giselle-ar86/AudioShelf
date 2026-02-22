@@ -1,19 +1,19 @@
 # i18n.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import gettext
 import os
 import logging
-from database import db_manager
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 LOCALE_DIR = os.path.join(APP_DIR, 'locale')
 
-SUPPORTED_LANGUAGES = ['en', 'fa']
+SUPPORTED_LANGUAGES = ['en', 'it', 'fa', 'sr_Latn', 'es']
 DEFAULT_LANGUAGE = 'en'
 
 _ = None
+ngettext = None
 
 
 def set_language(lang_code: str = None):
@@ -23,23 +23,19 @@ def set_language(lang_code: str = None):
     Args:
         lang_code: The language code (e.g., 'en', 'fa'). If None, loads from DB.
     """
-    global _
+    global _, ngettext
 
     if not lang_code:
-        try:
-            lang_code = db_manager.get_setting('language')
-            if lang_code not in SUPPORTED_LANGUAGES:
-                lang_code = DEFAULT_LANGUAGE
-        except Exception as e:
-            logging.warning(f"Could not load language from DB. Defaulting to 'en'. Error: {e}")
-            lang_code = DEFAULT_LANGUAGE
+        lang_code = DEFAULT_LANGUAGE
 
     try:
-        t = gettext.translation('base', localedir=LOCALE_DIR, languages=[lang_code], fallback=True)
+        t = gettext.translation('AudioShelf', localedir=LOCALE_DIR, languages=[lang_code], fallback=True)
         _ = t.gettext
+        ngettext = t.ngettext
     except FileNotFoundError:
         logging.warning(f"Translation file not found for lang '{lang_code}'. Using default text.")
         _ = lambda s: s
+        ngettext = lambda s, p, n: s if n == 1 else p
 
 
 set_language()
@@ -53,6 +49,7 @@ def switch_language(lang_code: str):
         lang_code: The new language code to apply.
     """
     if lang_code in SUPPORTED_LANGUAGES:
+        from database import db_manager
         db_manager.set_setting('language', lang_code)
         set_language(lang_code)
         logging.info(f"Language switched to {lang_code}. App restart may be required.")

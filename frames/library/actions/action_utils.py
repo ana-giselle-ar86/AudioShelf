@@ -1,11 +1,12 @@
 # frames/library/actions/action_utils.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
 import logging
 from typing import List, Tuple, Optional
 from i18n import _
+from database import db_manager
 from .. import list_manager
 from .. import history_manager
 from .. import search_handlers
@@ -67,13 +68,9 @@ def get_focused_book_info(frame, source: str) -> Optional[Tuple[int, str]]:
             if item_data:
                 item_type, item_id = item_data
                 if item_type == 'book':
-                    if frame.library_list.HasFlag(wx.LC_VIRTUAL):
-                        raw_label = list_manager.get_virtual_item_text(map_index, 0)
-                    else:
-                        raw_label = frame.library_list.GetItemText(focus_index)
-                    
-                    label = raw_label.rsplit(" [", 1)[0] if " [" in raw_label else raw_label
-                    return item_id, label
+                    book_details = db_manager.book_repo.get_book_details(item_id)
+                    if book_details:
+                        return item_id, book_details['title']
         except Exception as e:
             logging.error(f"Error getting focused book info (library): {e}")
 

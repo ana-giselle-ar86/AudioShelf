@@ -1,5 +1,5 @@
 # frames/player/equalizer_frame.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
@@ -227,7 +227,7 @@ class EqualizerFrame(wx.Frame):
         try:
             self.presets = db_manager.get_eq_presets()
             self.preset_choice.Clear()
-            preset_names = [p['name'] for p in self.presets]
+            preset_names = [_(p['name']) for p in self.presets]
             self.preset_choice.AppendItems(preset_names)
         except Exception as e:
             logging.error(f"Failed to load EQ presets: {e}", exc_info=True)

@@ -1,5 +1,5 @@
 # create_version.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import sys
@@ -7,7 +7,7 @@ import sys
 COMPANY_NAME = "Mehdi Rajabi"
 PRODUCT_NAME = "AudioShelf"
 FILE_DESCRIPTION = "AudioShelf - Accessible Audiobook Player"
-COPYRIGHT = "Copyright (c) 2025 Mehdi Rajabi"
+COPYRIGHT = "Copyright (c) 2025-2026 Mehdi Rajabi"
 INTERNAL_NAME = "AudioShelf.exe"
 ORIGINAL_FILENAME = "AudioShelf.exe"
 

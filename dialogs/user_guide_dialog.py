@@ -1,88 +1,29 @@
 # dialogs/user_guide_dialog.py
-# Copyright (c) 2025 Mehdi Rajabi
+# Copyright (c) 2025-2026 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+import os
 import wx
 from i18n import _
 
-USER_GUIDE_TEXT = """
-AudioShelf User Guide
-
---- 1. Introduction ---
-AudioShelf is a dedicated audiobook manager for Windows. Unlike standard media players, it treats every book as a unique project. It remembers your exact playback position, volume, speed, and bookmarks for each book independently.
-
---- 2. Library & Organization ---
-AudioShelf organizes your audiobooks into a structured library.
-
-*   Adding Books: 
-    - Use 'File > Add Book Folder' (Ctrl+O) to import a folder containing audio files.
-    - Use 'File > Add Single File' (Ctrl+Shift+O) for single-file audiobooks.
-    - You can also Paste books from your clipboard directly into the list.
-
-*   Shelves: 
-    Create custom shelves (Ctrl+N) to categorize your books (e.g., "Fiction", "History"). You can move books between shelves using the context menu (Right Click or Applications Key).
-
-*   Pinning: 
-    Press Ctrl+P on any book to "Pin" it. Pinned books appear at the top of the library for quick access.
-
-*   Finished Books: 
-    You can mark books as 'Finished' from the context menu. They will be visually distinguished but remain in your library.
-
-*   Refresh:
-    Press F5 to reload the library list and update any changes.
-
---- 3. Playback Controls ---
-Once you press Enter on a book, the Player opens.
-
-*   Basic Controls:
-    - Play/Pause: Space
-    - Stop (and reset to start): Shift + Space
-    - Volume: Up/Down Arrows
-    - Speed Control: J (Faster), H (Slower), K (Reset). Hold Shift for larger steps (0.5x).
-
-*   Navigation:
-    - Seek: Left/Right Arrows (Short jump), Ctrl+Left/Right (Long jump).
-    - Next/Prev File: PageDown / PageUp.
-    - Go To Time: Press 'G' to jump to a specific time or percentage.
-    - Go To File: Press 'Ctrl+G' to jump to a specific file number.
-
---- 4. Advanced Features ---
-
-*   Metadata Save (Save to Source): 
-    AudioShelf can save your progress and bookmarks into a small file next to your audiobook (.json). This allows you to move your book folder to another computer without losing your listening history. (Right Click > Save Data to Source).
-
-*   Sleep Timer: 
-    Press 'T' to start a quick sleep timer. Press Ctrl+T to configure custom duration and action (e.g., Shutdown computer after playback).
-
-*   Bookmarks: 
-    - Press 'B' to quick-bookmark the current position instantly.
-    - Press 'Shift+B' to add a bookmark with a custom Title and Note.
-    - Press 'Ctrl+B' to view and manage your saved bookmarks.
-
-*   Equalizer: 
-    Press 'E' to toggle the Equalizer on/off. Press Ctrl+E to adjust 10 frequency bands or select presets like "Vocal Clarity".
-
---- 5. Accessibility ---
-AudioShelf is optimized for screen readers, particularly NVDA.
-- Most actions have hotkeys (Press F1 for a full list of shortcuts).
-- The interface uses standard controls compatible with screen readers.
-- You can adjust the verbosity of speech announcements in Settings > Accessibility.
-"""
-
 class UserGuideDialog(wx.Dialog):
     """
-    Displays the comprehensive User Guide in a read-only text control.
+    Displays the User Guide by loading content from a Markdown file
+    based on the current language with a fallback to English.
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, lang_code="en"):
         super(UserGuideDialog, self).__init__(parent, title=_("User Guide"), size=(700, 600))
         self.panel = wx.Panel(self)
+        
+        # Load the content from help.txt based on localization
+        guide_content = self._get_guide_content(lang_code)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.text_ctrl = wx.TextCtrl(
             self.panel, 
-            value=_(USER_GUIDE_TEXT), 
+            value=guide_content, 
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2 | wx.BORDER_SUNKEN | wx.TE_BESTWRAP
         )
         
@@ -99,3 +40,27 @@ class UserGuideDialog(wx.Dialog):
         
         self.text_ctrl.SetFocus() 
         self.text_ctrl.SetInsertionPoint(0)
+
+    def _get_guide_content(self, lang_code):
+        """
+        Locates and reads the help.txt file for the specified language.
+        Falls back to English if the localized file is missing.
+        """
+        base_dir = os.getcwd()
+        help_file_name = "help.txt"
+        
+        # Define paths for localized and fallback (English) versions
+        localized_path = os.path.join(base_dir, "locale", lang_code, help_file_name)
+        fallback_path = os.path.join(base_dir, "locale", "en", help_file_name)
+
+        # Fallback logic: check if localized file exists, otherwise use English
+        target_path = localized_path if os.path.exists(localized_path) else fallback_path
+
+        try:
+            if os.path.exists(target_path):
+                with open(target_path, "r", encoding="utf-8") as f:
+                    return f.read()
+            else:
+                return _("Error: User Guide file (help.txt) was not found in the locale directory.")
+        except Exception as e:
+            return f"{_('Error loading User Guide')}: {str(e)}"
