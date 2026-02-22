@@ -82,7 +82,10 @@ def on_key_down(frame, event: wx.KeyEvent):
         else:
             speed_logic.change_speed(frame, -0.1)
     elif keycode == ord('K'):
-        speed_logic.toggle_reset_speed(frame)
+        if shift_down:
+            speed_logic.announce_current_speed(frame)
+        else:
+            speed_logic.toggle_reset_speed(frame)
 
     # Navigation (File / Library / Bookmark)
     elif keycode == wx.WXK_PAGEDOWN:
@@ -127,11 +130,11 @@ def on_key_down(frame, event: wx.KeyEvent):
             actions_logic.quick_bookmark(frame)
 
     # A-B Loop
-    elif keycode == ord('S'):
+    elif keycode == ord('A'):
         loop_logic.set_loop_start(frame)
     elif keycode == ord('D'):
         loop_logic.clear_loop(frame)
-    elif keycode == ord('A'):
+    elif keycode == ord('S'):
         loop_logic.set_loop_end(frame)
 
     # File Loop

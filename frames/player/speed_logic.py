@@ -4,7 +4,7 @@
 
 from decimal import Decimal, ROUND_HALF_UP, getcontext
 from i18n import _
-from nvda_controller import speak, LEVEL_MINIMAL
+from nvda_controller import speak, LEVEL_MINIMAL, LEVEL_CRITICAL
 
 # Set precision for decimal calculations
 getcontext().prec = 6
@@ -110,3 +110,7 @@ def toggle_reset_speed(frame):
         frame.engine.set_rate(1.0)
         frame.current_target_rate = 1.0
         speak(_("Speed reset to 1.0x"), LEVEL_MINIMAL)
+
+def announce_current_speed(frame):
+    current_rate = frame.current_target_rate
+    speak(_("Speed {0}x").format(current_rate), LEVEL_CRITICAL)
