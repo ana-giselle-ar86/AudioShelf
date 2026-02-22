@@ -1,4 +1,4 @@
-# main.py
+# AudioShelf.py
 # Copyright (c) 2025 Mehdi Rajabi
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -56,12 +56,12 @@ def _get_log_path_for_os() -> str:
 
 LOG_FILE = _get_log_path_for_os()
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(module)s - %(message)s"
-LOG_MAX_SIZE_MB = 5
-LOG_BACKUP_COUNT = 3
+LOG_MAX_SIZE_MB = 1
+LOG_BACKUP_COUNT = 1
 
 try:
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.WARNING)
     if logger.hasHandlers():
         logger.handlers.clear()
 
@@ -101,9 +101,9 @@ def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
         logging.error(f"Failed to cleanup during crash: {e}")
 
     wx.MessageBox(
-        "A critical error occurred. AudioShelf must close.\n"
-        f"Please check the log file for details:\n{LOG_FILE}",
-        "Unhandled Error",
+        _("A critical error occurred. AudioShelf must close.\n"
+        "Please check the log file for details:\n{0}").format(LOG_FILE),
+        _("Unhandled Error"),
         wx.OK | wx.ICON_ERROR
     )
 
@@ -111,6 +111,9 @@ sys.excepthook = handle_uncaught_exception
 
 try:
     from database import db_manager
+    user_lang = db_manager.get_setting('language')
+    import i18n
+    i18n.set_language(user_lang)
     from i18n import _
     from frames.library_frame import LibraryFrame
     from frames.library import task_handlers
