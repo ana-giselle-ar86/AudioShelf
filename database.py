@@ -114,6 +114,7 @@ class DatabaseManager:
             'smart_resume_threshold_sec': '300',
             'smart_resume_rewind_ms': '10000',
             'master_volume': '100',
+            'last_run_version': '0.0.0',
         }
 
         self.default_eq_presets = {

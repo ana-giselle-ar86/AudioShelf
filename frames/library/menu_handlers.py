@@ -207,7 +207,7 @@ def _batch_paste_worker(frame, paths: list, shelf_id: int):
 
         book_name = os.path.basename(path)
         if len(paths) > 1:
-            wx.CallAfter(lambda: speak(f"{_('Processing')} {book_name}...", LEVEL_MINIMAL))
+            wx.CallAfter(lambda: speak(_("Processing {0}...").format(book_name), LEVEL_MINIMAL))
 
         try:
             file_list = book_scanner.scan_folder(path, fast_scan=True)
@@ -262,16 +262,19 @@ def _batch_paste_worker(frame, paths: list, shelf_id: int):
         if success_count == 0 and fail_count == 0:
             speak(_("No valid items found."), LEVEL_MINIMAL)
         elif success_count > 0:
-            if success_count == 1:
-                msg = _("1 book added.")
-            else:
-                msg = _("{0} books added.").format(success_count)
-            
             if fail_count > 0:
-                msg += _(" ({0} failed)").format(fail_count)
+                if success_count == 1:
+                    msg = _("1 book added ({0} failed).").format(fail_count)
+                else:
+                    msg = _("{0} books added ({1} failed).").format(success_count, fail_count)
+            else:
+                if success_count == 1:
+                    msg = _("1 book added.")
+                else:
+                    msg = _("{0} books added.").format(success_count)
             speak(msg, LEVEL_CRITICAL)
         elif fail_count > 0:
-            speak(_("Failed to add {0} items."), LEVEL_CRITICAL)
+            speak(_("Failed to add {0} items.").format(fail_count), LEVEL_CRITICAL)
 
     wx.CallAfter(_finalize)
 
@@ -354,3 +357,10 @@ def on_clear_library(frame, event):
         speak(_("Error clearing library."), LEVEL_CRITICAL)
     finally:
         if wx.IsBusy(): wx.EndBusyCursor()
+
+def on_whats_new(frame, event):
+    """Opens the release notes / what's new dialog."""
+    from dialogs.whats_new_dialog import WhatsNewDialog
+    dlg = WhatsNewDialog(frame, show_donate=False)
+    dlg.ShowModal()
+    dlg.Destroy()

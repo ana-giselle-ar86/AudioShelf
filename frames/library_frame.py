@@ -11,6 +11,7 @@ import updater
 from database import db_manager
 from i18n import _
 from nvda_controller import set_app_focus_status
+from dialogs.about_dialog import APP_VERSION
 
 from .library import (
     list_manager,
@@ -66,6 +67,7 @@ ID_ACCEL_SELECT_ALL = wx.NewIdRef()
 ID_HELP_SHORTCUTS = wx.NewIdRef()
 ID_HELP_DONATE = wx.NewIdRef()
 ID_HELP_CHECK_UPDATE = wx.NewIdRef()
+ID_HELP_WHATS_NEW = wx.NewIdRef()
 
 ID_HISTORY_LIST = wx.NewIdRef()
 ID_SEARCH_LIST = wx.NewIdRef()
@@ -128,6 +130,7 @@ class LibraryFrame(wx.Frame):
         self._init_updater()
         self._bind_events()
         self._init_data()
+        wx.CallLater(1000, self._check_first_run_after_update)
 
     def _init_ui(self):
         """Initializes the UI components and layout."""
@@ -192,7 +195,8 @@ class LibraryFrame(wx.Frame):
         # Accelerator Table
         accel_entries = hotkey_manager.get_accelerator_entries()
         accel_entries.append((wx.ACCEL_CTRL, ord('V'), ID_PASTE_BOOK))
-        accel_entries.append((wx.ACCEL_NORMAL, wx.WXK_F1, ID_HELP_SHORTCUTS))
+        accel_entries.append((wx.ACCEL_NORMAL, wx.WXK_F1, ID_USER_GUIDE))
+        accel_entries.append((wx.ACCEL_SHIFT, wx.WXK_F1, ID_HELP_SHORTCUTS))
         self.SetAcceleratorTable(wx.AcceleratorTable(accel_entries))
 
         self.Centre()
@@ -229,6 +233,7 @@ class LibraryFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, lambda event: menu_handlers.on_about(self, event), id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, lambda event: menu_handlers.on_donate(self, event), id=ID_HELP_DONATE)
         self.Bind(wx.EVT_MENU, self.on_check_update_menu, id=ID_HELP_CHECK_UPDATE)
+        self.Bind(wx.EVT_MENU, lambda event: menu_handlers.on_whats_new(self, event), id=ID_HELP_WHATS_NEW)
         self.Bind(wx.EVT_MENU, lambda event: menu_handlers.on_open_logs(self, event), id=ID_OPEN_LOGS)
 
         # Library List Events
@@ -359,15 +364,18 @@ class LibraryFrame(wx.Frame):
 
         # Help Menu
         help_menu = wx.Menu()
-        guide_item = wx.MenuItem(help_menu, ID_USER_GUIDE, _("&User Guide...\tShift+F1"))
+        guide_item = wx.MenuItem(help_menu, ID_USER_GUIDE, _("&User Guide...\tF1"))
         help_menu.Append(guide_item)
-        shortcuts_item = wx.MenuItem(help_menu, ID_HELP_SHORTCUTS, _("&Keyboard Shortcuts...\tF1"))
+        shortcuts_item = wx.MenuItem(help_menu, ID_HELP_SHORTCUTS, _("&Keyboard Shortcuts...\tShift+F1"))
         help_menu.Append(shortcuts_item)
         donate_item = wx.MenuItem(help_menu, ID_HELP_DONATE, _("&Donate..."))
         help_menu.Append(donate_item)
         help_menu.AppendSeparator()
         check_update_item = wx.MenuItem(help_menu, ID_HELP_CHECK_UPDATE, _("Check for &Updates..."))
         help_menu.Append(check_update_item)
+
+        whats_new_item = wx.MenuItem(help_menu, ID_HELP_WHATS_NEW, _("What's &New..."))
+        help_menu.Append(whats_new_item)
         help_menu.AppendSeparator()
         logs_item = wx.MenuItem(help_menu, ID_OPEN_LOGS, _("Open &Logs Folder"))
         help_menu.Append(logs_item)
@@ -473,3 +481,15 @@ class LibraryFrame(wx.Frame):
         else:
             wx.MessageBox(_("Download failed.\nError: {0}").format(event.error_msg), _("Error"), wx.OK | wx.ICON_ERROR,
                           parent=self)
+
+    def _check_first_run_after_update(self):
+        """Checks if the app has been updated since the last run."""
+        last_version = db_manager.get_setting('last_run_version')
+
+        if last_version != APP_VERSION:
+            db_manager.set_setting('last_run_version', APP_VERSION)
+            
+            from dialogs.whats_new_dialog import WhatsNewDialog
+            dlg = WhatsNewDialog(self, show_donate=True)
+            dlg.ShowModal()
+            dlg.Destroy()
