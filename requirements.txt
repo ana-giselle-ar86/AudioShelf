@@ -1,9 +1,14 @@
 # --- GUI & Core ---
 wxPython==4.2.4
 
-# --- Audio Engine & Metadata ---
+# --- Audio Engine ---
 python-mpv==1.0.8
+
+# --- Metadata ---
 tinytag==2.1.2
+
+# --- Accessibility ---
+accessible_output2==0.17
 
 # --- System Audio Control (Pycaw) ---
 comtypes==1.4.14
