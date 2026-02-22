@@ -1,0 +1,2652 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2026-02-23 02:19+0330\n"
+"PO-Revision-Date: 2026-02-23 02:19+0330\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: AudioShelf.py:104
+#, python-brace-format
+msgid ""
+"A critical error occurred. AudioShelf must close.\n"
+"Please check the log file for details:\n"
+"{0}"
+msgstr ""
+
+#: AudioShelf.py:106
+msgid "Unhandled Error"
+msgstr ""
+
+#: AudioShelf.py:185
+msgid "AudioShelf - My Library"
+msgstr ""
+
+#: db_layer/equalizer_repo.py:11
+msgid "Flat"
+msgstr ""
+
+#: db_layer/equalizer_repo.py:12
+msgid "Vocal Clarity"
+msgstr ""
+
+#: db_layer/equalizer_repo.py:13
+msgid "Fullness"
+msgstr ""
+
+#: db_layer/equalizer_repo.py:14
+msgid "Reduce Boominess"
+msgstr ""
+
+#: db_layer/equalizer_repo.py:15
+msgid "De-Esser"
+msgstr ""
+
+#: db_layer/playback_repo.py:128
+msgid "File Missing?"
+msgstr ""
+
+#: dialogs/about_dialog.py:39
+msgid "About AudioShelf"
+msgstr ""
+
+#: dialogs/about_dialog.py:48
+#, python-brace-format
+msgid "Version {0}"
+msgstr ""
+
+#: dialogs/about_dialog.py:51
+msgid ""
+"A specialized audiobook manager designed for precision and accessibility.\n"
+"Unlike generic media players, AudioShelf treats every book as a unique "
+"entity, preserving its independent progress, history, and playback settings."
+msgstr ""
+
+#: dialogs/about_dialog.py:58
+msgid "Copyright (c) 2025-2026 Mehdi Rajabi. Released under GNU GPL v3."
+msgstr ""
+
+#: dialogs/about_dialog.py:61
+msgid "Translator Name"
+msgstr ""
+
+#: dialogs/about_dialog.py:64
+#, python-brace-format
+msgid "Translated by: {0}"
+msgstr ""
+
+#: dialogs/about_dialog.py:70
+msgid "Copy Source Link"
+msgstr ""
+
+#: dialogs/about_dialog.py:71
+msgid "GitHub link"
+msgstr ""
+
+#: dialogs/about_dialog.py:73
+msgid "Copy Email Address"
+msgstr ""
+
+#: dialogs/about_dialog.py:74
+msgid "Email address"
+msgstr ""
+
+#: dialogs/about_dialog.py:89 dialogs/bookmark_list_dialog.py:53
+#: dialogs/donate_dialog.py:50 dialogs/properties_dialog.py:50
+#: dialogs/shortcuts_dialog.py:28 dialogs/user_guide_dialog.py:31
+#: dialogs/whats_new_dialog.py:38
+msgid "&Close"
+msgstr ""
+
+#: dialogs/about_dialog.py:106
+#, python-brace-format
+msgid "{0} copied."
+msgstr ""
+
+#: dialogs/about_dialog.py:108
+msgid "Failed to copy."
+msgstr ""
+
+#: dialogs/bookmark_dialog.py:15
+msgid "Add/Edit Bookmark"
+msgstr ""
+
+#: dialogs/bookmark_dialog.py:20
+msgid "&Title (Optional):"
+msgstr ""
+
+#: dialogs/bookmark_dialog.py:26
+msgid "&Note (Optional):"
+msgstr ""
+
+#: dialogs/bookmark_dialog.py:33
+msgid "&OK"
+msgstr ""
+
+#: dialogs/bookmark_dialog.py:34 dialogs/filelist_dialog.py:42
+#: dialogs/goto_dialog.py:44 dialogs/goto_file_dialog.py:43
+#: dialogs/settings_dialog.py:54 dialogs/sleep_timer_dialog.py:99
+msgid "&Cancel"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:30
+msgid "Bookmarks"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:37
+msgid "&Bookmarks:"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:40 dialogs/properties_dialog.py:124
+msgid "Title"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:41
+msgid "Time"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:42 dialogs/properties_dialog.py:100
+msgid "File"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:43
+msgid "Note"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:51
+msgid "&Go To Bookmark"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:52
+msgid "&Delete Bookmark"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:90 frames/player/navigation.py:80
+#: frames/player/navigation.py:113
+msgid "(No Title)"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:103
+msgid "Error loading bookmarks."
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:122
+#, python-brace-format
+msgid "Are you sure you want to delete bookmark '{0}'?"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:123
+#: frames/library/actions/shelf_actions.py:133
+#: frames/player/equalizer_frame.py:293
+msgid "Confirm Delete"
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:126
+msgid "Bookmark deleted."
+msgstr ""
+
+#: dialogs/bookmark_list_dialog.py:140
+msgid "Error deleting bookmark."
+msgstr ""
+
+#: dialogs/confirm_dialog.py:30
+msgid "Cancel"
+msgstr ""
+
+#: dialogs/donate_dialog.py:25
+msgid "Support Development"
+msgstr ""
+
+#: dialogs/donate_dialog.py:31
+msgid ""
+"If you find AudioShelf useful, you can support its development via "
+"cryptocurrency:"
+msgstr ""
+
+#: dialogs/donate_dialog.py:80
+#, python-brace-format
+msgid "Copy {0} Address"
+msgstr ""
+
+#: dialogs/donate_dialog.py:95
+#, python-brace-format
+msgid "{0} address copied to clipboard."
+msgstr ""
+
+#: dialogs/donate_dialog.py:97
+msgid "Failed to open clipboard."
+msgstr ""
+
+#: dialogs/filelist_dialog.py:24
+msgid "File List"
+msgstr ""
+
+#: dialogs/filelist_dialog.py:29
+msgid "&Files:"
+msgstr ""
+
+#: dialogs/filelist_dialog.py:41
+msgid "&Go to File"
+msgstr ""
+
+#: dialogs/goto_dialog.py:28
+msgid "Go To..."
+msgstr ""
+
+#: dialogs/goto_dialog.py:34
+msgid "Enter time (e.g., 1:30:10, 45:20, or 300) or percentage (e.g., 50%)."
+msgstr ""
+
+#: dialogs/goto_dialog.py:43 dialogs/goto_file_dialog.py:42
+msgid "&Go"
+msgstr ""
+
+#: dialogs/goto_dialog.py:68
+msgid "Invalid format."
+msgstr ""
+
+#: dialogs/goto_dialog.py:70
+msgid "Invalid format. Please enter time as HH:MM:SS or percentage as 50%."
+msgstr ""
+
+#: dialogs/goto_dialog.py:71 dialogs/goto_file_dialog.py:72
+msgid "Invalid Input"
+msgstr ""
+
+#: dialogs/goto_file_dialog.py:25
+msgid "Go to File Number"
+msgstr ""
+
+#: dialogs/goto_file_dialog.py:33
+#, python-brace-format
+msgid "Enter file number (1 to {0}):"
+msgstr ""
+
+#: dialogs/goto_file_dialog.py:69
+msgid "Invalid number."
+msgstr ""
+
+#: dialogs/goto_file_dialog.py:71
+#, python-brace-format
+msgid "Invalid format. Please enter a number between 1 and {0}."
+msgstr ""
+
+#: dialogs/properties_dialog.py:20
+msgid "Calculating..."
+msgstr ""
+
+#: dialogs/properties_dialog.py:33
+msgid "Book Properties"
+msgstr ""
+
+#: dialogs/properties_dialog.py:70
+msgid "Error Loading Book"
+msgstr ""
+
+#: dialogs/properties_dialog.py:76 frames/library/history_manager.py:149
+#: frames/library/search_handlers.py:258
+msgid "Unknown"
+msgstr ""
+
+#: dialogs/properties_dialog.py:78
+msgid "Default Shelf"
+msgstr ""
+
+#: dialogs/properties_dialog.py:89
+msgid "1 file"
+msgstr ""
+
+#: dialogs/properties_dialog.py:91
+#, python-brace-format
+msgid "{0} files"
+msgstr ""
+
+#: dialogs/properties_dialog.py:95
+msgid "Not started"
+msgstr ""
+
+#: dialogs/properties_dialog.py:100
+msgid "of"
+msgstr ""
+
+#: dialogs/properties_dialog.py:103 frames/library/list_manager.py:113
+msgid "Finished"
+msgstr ""
+
+#: dialogs/properties_dialog.py:106
+msgid "Never"
+msgstr ""
+
+#: dialogs/properties_dialog.py:109
+msgid "Unknown Title"
+msgstr ""
+
+#: dialogs/properties_dialog.py:116 frames/library/list_manager.py:125
+msgid "Pinned"
+msgstr ""
+
+#: dialogs/properties_dialog.py:116
+msgid "Normal"
+msgstr ""
+
+#: dialogs/properties_dialog.py:126
+msgid "Status"
+msgstr ""
+
+#: dialogs/properties_dialog.py:127
+msgid "Progress"
+msgstr ""
+
+#: dialogs/properties_dialog.py:128
+msgid "Total Duration"
+msgstr ""
+
+#: dialogs/properties_dialog.py:130
+msgid "File Info"
+msgstr ""
+
+#: dialogs/properties_dialog.py:131
+msgid "Location"
+msgstr ""
+
+#: dialogs/properties_dialog.py:132
+msgid "File Count"
+msgstr ""
+
+#: dialogs/properties_dialog.py:133
+msgid "Total Size"
+msgstr ""
+
+#: dialogs/properties_dialog.py:134 frames/library/list_manager.py:139
+msgid "Shelf"
+msgstr ""
+
+#: dialogs/properties_dialog.py:136 frames/library_frame.py:174
+#: frames/library_frame.py:175
+msgid "History"
+msgstr ""
+
+#: dialogs/properties_dialog.py:137
+msgid "Last Played"
+msgstr ""
+
+#: dialogs/settings/accessibility.py:13 dialogs/settings/accessibility.py:60
+#: nvda_controller.py:157
+msgid "Full"
+msgstr ""
+
+#: dialogs/settings/accessibility.py:14 nvda_controller.py:151
+msgid "Minimal"
+msgstr ""
+
+#: dialogs/settings/accessibility.py:15 nvda_controller.py:154
+msgid "Silent"
+msgstr ""
+
+#: dialogs/settings/accessibility.py:31
+msgid "Screen Reader Feedback"
+msgstr ""
+
+#: dialogs/settings/accessibility.py:37
+msgid "Feedback Level"
+msgstr ""
+
+#: dialogs/settings/accessibility.py:48
+msgid ""
+"Announce feedback for global media keys (e.g., Volume) even when the player "
+"is hidden."
+msgstr ""
+
+#: dialogs/settings/general.py:24
+msgid "Language"
+msgstr ""
+
+#: dialogs/settings/general.py:27
+msgid "Application Language:"
+msgstr ""
+
+#: dialogs/settings/general.py:30 dialogs/settings/general.py:69
+msgid "English (en)"
+msgstr ""
+
+#: dialogs/settings/general.py:31
+msgid "Italian (it)"
+msgstr ""
+
+#: dialogs/settings/general.py:32
+msgid "Persian (fa)"
+msgstr ""
+
+#: dialogs/settings/general.py:33
+msgid "Serbian (Latin) (sr_Latn)"
+msgstr ""
+
+#: dialogs/settings/general.py:34
+msgid "Spanish (es)"
+msgstr ""
+
+#: dialogs/settings/general.py:46
+msgid "Language changes require an application restart."
+msgstr ""
+
+#: dialogs/settings/general.py:51
+msgid "Updates"
+msgstr ""
+
+#: dialogs/settings/general.py:54
+msgid "Automatically check for updates on startup"
+msgstr ""
+
+#: dialogs/settings/library_view.py:13 frames/library/hotkey_manager.py:232
+#: frames/library/list_manager.py:74
+msgid "Pinned Books"
+msgstr ""
+
+#: dialogs/settings/library_view.py:14 frames/library/list_manager.py:78
+#: frames/library/list_manager.py:146 frames/library/list_manager.py:147
+#: frames/library/list_manager.py:348
+msgid "All Books"
+msgstr ""
+
+#: dialogs/settings/library_view.py:15 frames/library/hotkey_manager.py:252
+#: frames/library/list_manager.py:80 frames/library/list_manager.py:153
+#: frames/library/list_manager.py:154
+msgid "Finished Books"
+msgstr ""
+
+#: dialogs/settings/library_view.py:32
+msgid "Root List Visibility"
+msgstr ""
+
+#: dialogs/settings/library_view.py:56
+#, python-brace-format
+msgid "Show '{0}' section"
+msgstr ""
+
+#: dialogs/settings/playback.py:23
+msgid "Stop playback"
+msgstr ""
+
+#: dialogs/settings/playback.py:24
+msgid "Loop (play from start)"
+msgstr ""
+
+#: dialogs/settings/playback.py:25
+msgid "Close the player"
+msgstr ""
+
+#: dialogs/settings/playback.py:33
+msgid "Always (Disabled Threshold)"
+msgstr ""
+
+#: dialogs/settings/playback.py:34
+#, python-brace-format
+msgid "{0} minute"
+msgstr ""
+
+#: dialogs/settings/playback.py:35 dialogs/settings/playback.py:36
+#: dialogs/settings/playback.py:37 dialogs/settings/playback.py:38
+#: dialogs/settings/playback.py:39 dialogs/settings/playback.py:45
+#: dialogs/settings/playback.py:46 dialogs/sleep_timer_dialog.py:127
+#, python-brace-format
+msgid "{0} minutes"
+msgstr ""
+
+#: dialogs/settings/playback.py:40
+#, python-brace-format
+msgid "{0} hour"
+msgstr ""
+
+#: dialogs/settings/playback.py:43
+msgid "Disabled"
+msgstr ""
+
+#: dialogs/settings/playback.py:44
+#, python-brace-format
+msgid "{0} seconds"
+msgstr ""
+
+#: dialogs/settings/playback.py:55
+msgid "Auto-Rewind Settings"
+msgstr ""
+
+#: dialogs/settings/playback.py:58
+msgid ""
+"To help you remember the story, AudioShelf can jump back slightly after a "
+"break."
+msgstr ""
+
+#: dialogs/settings/playback.py:63
+msgid "Only if the break was longer than:"
+msgstr ""
+
+#: dialogs/settings/playback.py:73
+msgid "Amount to jump back (Seconds):"
+msgstr ""
+
+#: dialogs/settings/playback.py:82
+msgid "Playback Behavior"
+msgstr ""
+
+#: dialogs/settings/playback.py:85
+msgid "Automatically pause playback when a dialog window opens."
+msgstr ""
+
+#: dialogs/settings/playback.py:88
+msgid "Automatically resume playback after a major jump."
+msgstr ""
+
+#: dialogs/settings/playback.py:92
+msgid "When the end of a book is reached:"
+msgstr ""
+
+#: dialogs/settings/playback.py:96
+msgid "Seek Times"
+msgstr ""
+
+#: dialogs/settings/playback.py:101
+msgid "Short Seek Forward (Right Arrow) (seconds):"
+msgstr ""
+
+#: dialogs/settings/playback.py:105
+msgid "Short Seek Backward (Left Arrow) (seconds):"
+msgstr ""
+
+#: dialogs/settings/playback.py:109
+msgid "Long Seek Forward (Ctrl+Right) (minutes):"
+msgstr ""
+
+#: dialogs/settings/playback.py:113
+msgid "Long Seek Backward (Ctrl+Left) (minutes):"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:17 dialogs/sleep_timer_dialog.py:144
+#: frames/player/info.py:127
+msgid "Pause playback"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:18 dialogs/sleep_timer_dialog.py:145
+#: frames/player/info.py:128
+msgid "Close player"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:19 dialogs/sleep_timer_dialog.py:146
+#: frames/player/info.py:129
+msgid "Close AudioShelf"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:20 dialogs/sleep_timer_dialog.py:147
+#: frames/player/info.py:130 utils.py:68
+msgid "Sleep computer"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:21 dialogs/sleep_timer_dialog.py:148
+#: frames/player/info.py:131 utils.py:69
+msgid "Hibernate computer"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:22 dialogs/sleep_timer_dialog.py:149
+#: frames/player/info.py:132 utils.py:70
+msgid "Shutdown computer"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:28 dialogs/sleep_timer_dialog.py:69
+msgid "Silent (Execute immediately)"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:29 dialogs/sleep_timer_dialog.py:70
+msgid "Confirm before executing"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:30 dialogs/sleep_timer_dialog.py:71
+msgid "Show timed confirmation (2 min)"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:46
+msgid "Quick Sleep Timer Defaults (T Key)"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:52
+msgid "Default Duration (minutes):"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:58
+msgid "Default Action:"
+msgstr ""
+
+#: dialogs/settings/sleeptimer.py:65
+msgid "Default OS Action Mode:"
+msgstr ""
+
+#: dialogs/settings_dialog.py:24 dialogs/shortcuts_dialog.py:63
+msgid "Settings"
+msgstr ""
+
+#: dialogs/settings_dialog.py:32
+msgid "General"
+msgstr ""
+
+#: dialogs/settings_dialog.py:36
+msgid "Playback"
+msgstr ""
+
+#: dialogs/settings_dialog.py:40 dialogs/sleep_timer_dialog.py:26
+msgid "Sleep Timer"
+msgstr ""
+
+#: dialogs/settings_dialog.py:44
+msgid "Accessibility"
+msgstr ""
+
+#: dialogs/settings_dialog.py:48
+msgid "Library View"
+msgstr ""
+
+#: dialogs/settings_dialog.py:53
+msgid "&Save"
+msgstr ""
+
+#: dialogs/settings_dialog.py:82
+msgid "Settings saved."
+msgstr ""
+
+#: dialogs/settings_dialog.py:86
+msgid "Language change detected. Please restart the application."
+msgstr ""
+
+#: dialogs/settings_dialog.py:88
+msgid "Language changes will take effect after you restart AudioShelf."
+msgstr ""
+
+#: dialogs/settings_dialog.py:89
+msgid "Restart Required"
+msgstr ""
+
+#: dialogs/settings_dialog.py:97
+msgid "Error saving settings."
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:11 dialogs/shortcuts_dialog.py:71
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:16
+msgid "List of all available keyboard shortcuts:"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:20
+msgid "Action"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:21
+msgid "Shortcut"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:51
+msgid "General & Library"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:52
+msgid "Add Book Folder"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:53
+msgid "Add Single File"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:54
+msgid "Paste Book from Clipboard"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:55 frames/library/actions/shelf_actions.py:50
+#: frames/library/menu_handlers.py:30
+msgid "Create New Shelf"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:56
+msgid "Refresh Library"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:57
+msgid "Rename Item"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:58
+msgid "Delete Item"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:59 frames/library/actions/book_actions.py:217
+msgid "Permanent Delete"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:60
+msgid "Properties"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:61
+msgid "Go Back / Up Level"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:62
+msgid "Go Forward"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:64
+msgid "Cycle Verbosity"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:65
+msgid "Search"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:66
+msgid "Cancel Search / Return to Library"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:67
+msgid "Select / Deselect Item"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:68
+msgid "Select All"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:69
+msgid "Context Menu"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:69
+msgid "Apps Key / Right Click"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:70 dialogs/user_guide_dialog.py:16
+msgid "User Guide"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:73
+msgid "Navigation"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:74
+msgid "Focus Library List"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:75
+msgid "Focus History List"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:76
+msgid "Play Last Book"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:77
+msgid "Play Pinned Book (1-9)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:78
+msgid "Toggle Pin (Selected)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:79
+msgid "Jump to All Books"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:80
+msgid "Jump to Default Shelf"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:81
+msgid "Jump to Custom Shelves"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:82
+msgid "Jump to Finished Books"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:83
+msgid "Jump to Pinned Books"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:84
+msgid "Previous Shelf"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:85
+msgid "Next Shelf"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:87
+msgid "Player: Playback"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:88
+msgid "Play / Pause"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:89
+msgid "Stop (Reset to start)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:90
+msgid "Previous File"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:91
+msgid "Next File"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:92
+msgid "Previous Book"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:93
+msgid "Next Book"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:94
+msgid "Previous Bookmark"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:95
+msgid "Next Bookmark"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:96
+msgid "Close Player / Back to Library"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:98
+msgid "Player: Seeking"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:99
+msgid "Seek Forward (Short)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:99
+msgid "Right Arrow"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:100
+msgid "Seek Backward (Short)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:100
+msgid "Left Arrow"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:101
+msgid "Seek Forward (Long)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:101
+msgid "Ctrl + Right Arrow"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:102
+msgid "Seek Backward (Long)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:102
+msgid "Ctrl + Left Arrow"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:103
+msgid "Restart File"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:104
+msgid "Go to End of File"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:105
+msgid "Go to 50% of File"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:106
+msgid "Go to 30s before End"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:107
+msgid "Go To Time..."
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:108
+msgid "Show File List"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:109
+msgid "Go To File Number..."
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:111
+msgid "Player: Audio"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:112
+msgid "Volume Up"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:112
+msgid "Up Arrow"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:113
+msgid "Volume Down"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:113
+msgid "Down Arrow"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:114
+msgid "System Volume Up"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:115
+msgid "System Volume Down"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:116
+msgid "Increase Speed (+0.1)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:117
+msgid "Decrease Speed (-0.1)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:118
+msgid "Increase Speed (+0.5)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:119
+msgid "Decrease Speed (-0.5)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:120
+msgid "Toggle Normal / Custom Speed"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:121
+msgid "Announce Current Speed"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:122
+msgid "Toggle Equalizer"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:123
+msgid "Open Equalizer"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:125
+msgid "Player: Tools"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:126
+msgid "Add Quick Bookmark"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:127
+msgid "Add Bookmark (Dialog)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:128
+msgid "Show Bookmarks"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:129
+msgid "Set A-B Loop Start"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:130
+msgid "Set A-B Loop End"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:131
+msgid "Clear Loop"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:132
+msgid "Toggle File Repeat"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:134
+msgid "Player: Sleep Timer"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:135
+msgid "Start Quick Timer"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:136
+msgid "Open Timer Dialog"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:137
+msgid "Cancel Timer"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:138
+msgid "Announce Timer"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:140
+msgid "Player: Info Announcements"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:141
+msgid "Announce Current Time"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:142
+msgid "Copy Current Time"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:143
+msgid "Time Remaining (File)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:144
+msgid "Time Remaining (File, Speed Adjusted)"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:145
+msgid "Total Elapsed / Duration"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:146
+msgid "Total Remaining"
+msgstr ""
+
+#: dialogs/shortcuts_dialog.py:147
+msgid "Total Remaining (Speed Adjusted)"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:32
+msgid "&Duration:"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:49
+msgid "&Action:"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:66
+msgid "OS Action &Confirmation:"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:93
+msgid "&Save as default for Quick Timer"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:98
+msgid "&Start Timer"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:125 utils.py:42
+#, python-brace-format
+msgid "1 hour"
+msgid_plural "{0} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: dialogs/sleep_timer_dialog.py:130
+msgid "2 hours"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:132
+#, python-brace-format
+msgid "1 hour {0} minutes"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:136
+#, python-brace-format
+msgid "{0} hours"
+msgstr ""
+
+#: dialogs/sleep_timer_dialog.py:138
+#, python-brace-format
+msgid "{0} hours {1} minutes"
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:25
+msgid "Action Confirmation"
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:34
+msgid "The sleep timer has expired. The following action will be performed:"
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:48
+msgid "&Cancel Action"
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:68
+#, python-brace-format
+msgid "Confirmation required. Action: {0}. Press Cancel to stop."
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:75
+#, python-brace-format
+msgid "Time remaining: {0} seconds"
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:80
+msgid "1 minute remaining"
+msgstr ""
+
+#: dialogs/timed_action_dialog.py:82
+msgid "30 seconds remaining"
+msgstr ""
+
+#: dialogs/user_guide_dialog.py:64
+msgid ""
+"Error: User Guide file (help.txt) was not found in the locale directory."
+msgstr ""
+
+#: dialogs/user_guide_dialog.py:66
+msgid "Error loading User Guide"
+msgstr ""
+
+#: dialogs/whats_new_dialog.py:14
+msgid "What's New in AudioShelf"
+msgstr ""
+
+#: dialogs/whats_new_dialog.py:23
+msgid "Release Notes:"
+msgstr ""
+
+#: dialogs/whats_new_dialog.py:32 frames/library_frame.py:371
+msgid "&Donate..."
+msgstr ""
+
+#: dialogs/whats_new_dialog.py:64
+msgid "Changelog file not found."
+msgstr ""
+
+#: dialogs/whats_new_dialog.py:107
+msgid "Error loading changelog."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:44
+msgid "Cannot rename multiple items at once."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:52
+msgid "Enter new name for book:"
+msgstr ""
+
+#: frames/library/actions/book_actions.py:52
+msgid "Rename Book"
+msgstr ""
+
+#: frames/library/actions/book_actions.py:59
+msgid "Book renamed."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:63
+msgid "Error renaming book."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:72
+msgid "Cannot get properties for multiple items at once."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:86
+msgid "Error opening properties."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:92
+msgid "Cannot open location for multiple items at once."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:115
+msgid "Could not open folder."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:117
+msgid "Book location not found."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:123
+msgid "Cannot update location for multiple items at once."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:132
+#: frames/library/menu_handlers.py:285 frames/library/task_handlers.py:48
+#: frames/library/task_handlers.py:65 frames/library/task_handlers.py:89
+msgid "Already scanning. Please wait."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:135
+#, python-brace-format
+msgid "Choose the NEW location for book '{0}'..."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:141
+msgid "Scanning new location..."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:150
+#: frames/library/task_handlers.py:115
+msgid "Error starting scan."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:169
+#, python-brace-format
+msgid ""
+"Are you sure you want to remove '{0}' from your library? (Files will NOT be "
+"deleted)"
+msgid_plural ""
+"Are you sure you want to remove {0} books from your library? (Files will NOT "
+"be deleted)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:174
+msgid "Confirm Remove"
+msgstr ""
+
+#: frames/library/actions/book_actions.py:183
+#, python-brace-format
+msgid "Book removed from library."
+msgid_plural "{0} books removed from library."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:193
+msgid "Error removing books."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:209
+#, python-brace-format
+msgid ""
+"WARNING: You are about to permanently delete '{0}' and all its files from "
+"your computer.\n"
+"This action CANNOT be undone."
+msgid_plural ""
+"WARNING: You are about to permanently delete {0} books and all their files "
+"from your computer.\n"
+"This action CANNOT be undone."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:219
+msgid "I understand that these files will be deleted permanently"
+msgstr ""
+
+#: frames/library/actions/book_actions.py:220
+msgid "Delete Files"
+msgstr ""
+
+#: frames/library/actions/book_actions.py:231
+msgid "Deleting files..."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:256
+#, python-brace-format
+msgid "{0} book deleted permanently."
+msgid_plural "{0} books deleted permanently."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:264
+#, python-brace-format
+msgid "{0} book failed to delete."
+msgid_plural "{0} books failed to delete."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:274
+msgid "Error deleting files."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:311
+#, python-brace-format
+msgid "Book pinned."
+msgid_plural "{0} books pinned."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:319
+msgid "Error pinning one or more books."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:337
+#, python-brace-format
+msgid "Book unpinned."
+msgid_plural "{0} books unpinned."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:345
+msgid "Error unpinning one or more books."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:371
+#, python-brace-format
+msgid "Marked as finished."
+msgid_plural "{0} books marked as finished."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/book_actions.py:379
+#: frames/library/actions/book_actions.py:405
+msgid "Error updating book status."
+msgstr ""
+
+#: frames/library/actions/book_actions.py:397
+#, python-brace-format
+msgid "Marked as unfinished."
+msgid_plural "{0} books marked as unfinished."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/metadata_actions.py:25
+msgid "Cannot save data for multiple items at once."
+msgstr ""
+
+#: frames/library/actions/metadata_actions.py:33
+#, python-brace-format
+msgid "Saving data for {0}..."
+msgstr ""
+
+#: frames/library/actions/metadata_actions.py:39
+msgid "Error: Book details not found."
+msgstr ""
+
+#: frames/library/actions/metadata_actions.py:44
+msgid "Source location not found."
+msgstr ""
+
+#: frames/library/actions/metadata_actions.py:105
+msgid "Book data saved to source."
+msgstr ""
+
+#: frames/library/actions/metadata_actions.py:109
+msgid "Error saving data. Check logs."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:32
+msgid "Book(s) moved."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:36
+msgid "Error moving books."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:50
+#: frames/library/menu_handlers.py:30
+msgid "Enter name for new shelf:"
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:59
+msgid "Shelf created and book(s) moved."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:62
+#: frames/library/actions/shelf_actions.py:95
+#: frames/library/menu_handlers.py:45
+msgid "Error: A shelf with this name already exists."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:65
+#: frames/library/menu_handlers.py:48
+msgid "Error creating shelf."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:83
+msgid "Cannot rename the Default Shelf."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:86
+msgid "Enter new name for shelf:"
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:86
+msgid "Rename Shelf"
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:92
+msgid "Shelf renamed."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:98
+msgid "Error renaming shelf."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:119
+msgid "Cannot delete the Default Shelf."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:128
+#, python-brace-format
+msgid ""
+"Are you sure you want to delete shelf '{0}'? This only works if the shelf is "
+"empty."
+msgid_plural ""
+"Are you sure you want to delete {0} shelves? Only empty shelves will be "
+"deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/shelf_actions.py:153
+#, python-brace-format
+msgid "1 shelf deleted. {1} failed (not empty)."
+msgid_plural "{0} shelves deleted. {1} failed (not empty)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/shelf_actions.py:159
+#, python-brace-format
+msgid "1 shelf deleted."
+msgid_plural "{0} shelves deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: frames/library/actions/shelf_actions.py:168
+msgid "Could not delete shelves. Make sure they are empty."
+msgstr ""
+
+#: frames/library/actions/shelf_actions.py:172
+msgid "Error deleting shelves."
+msgstr ""
+
+#: frames/library/context_handlers.py:115
+msgid "&Play Book"
+msgstr ""
+
+#: frames/library/context_handlers.py:123
+msgid "&Unpin Book"
+msgstr ""
+
+#: frames/library/context_handlers.py:126
+msgid "&Pin Book"
+msgstr ""
+
+#: frames/library/context_handlers.py:132
+msgid "Mark as &Unfinished"
+msgstr ""
+
+#: frames/library/context_handlers.py:135
+msgid "Mark as &Finished"
+msgstr ""
+
+#: frames/library/context_handlers.py:140
+msgid "&Rename Book..."
+msgstr ""
+
+#: frames/library/context_handlers.py:144
+msgid "Properties..."
+msgstr ""
+
+#: frames/library/context_handlers.py:165
+msgid "Create New Shelf..."
+msgstr ""
+
+#: frames/library/context_handlers.py:167
+msgid "&Move to Shelf"
+msgstr ""
+
+#: frames/library/context_handlers.py:171
+msgid "Open Book Location"
+msgstr ""
+
+#: frames/library/context_handlers.py:175
+msgid "Update Book Location..."
+msgstr ""
+
+#: frames/library/context_handlers.py:179
+msgid "Save Data to Source..."
+msgstr ""
+
+#: frames/library/context_handlers.py:185
+msgid "&Delete from Library"
+msgstr ""
+
+#: frames/library/context_handlers.py:187
+msgid "Delete from Computer (Permanent)..."
+msgstr ""
+
+#: frames/library/context_handlers.py:204
+msgid "&Rename Shelf..."
+msgstr ""
+
+#: frames/library/context_handlers.py:208
+msgid "&Delete Empty Shelf"
+msgstr ""
+
+#: frames/library/context_handlers.py:233
+msgid "&Add Book..."
+msgstr ""
+
+#: frames/library/context_handlers.py:236
+msgid "&Refresh"
+msgstr ""
+
+#: frames/library/history_manager.py:72
+msgid "Error loading history."
+msgstr ""
+
+#: frames/library/history_manager.py:116
+msgid "Error building history playlist."
+msgstr ""
+
+#: frames/library/history_manager.py:160 frames/library/search_handlers.py:268
+#, python-brace-format
+msgid "Book: {0} | In: {1}"
+msgstr ""
+
+#: frames/library/hotkey_manager.py:127
+msgid "No playback history found."
+msgstr ""
+
+#: frames/library/hotkey_manager.py:134
+#, python-brace-format
+msgid "Playing last book: {0}"
+msgstr ""
+
+#: frames/library/hotkey_manager.py:147
+msgid "Please select a book to pin or unpin."
+msgstr ""
+
+#: frames/library/hotkey_manager.py:179
+msgid "pinned"
+msgstr ""
+
+#: frames/library/hotkey_manager.py:179
+msgid "unpinned"
+msgstr ""
+
+#: frames/library/hotkey_manager.py:181
+#, python-brace-format
+msgid "{0} {1}."
+msgstr ""
+
+#: frames/library/hotkey_manager.py:183
+#, python-brace-format
+msgid "{0} books {1}."
+msgstr ""
+
+#: frames/library/hotkey_manager.py:189
+msgid "Error changing pin state."
+msgstr ""
+
+#: frames/library/hotkey_manager.py:200 frames/player/navigation.py:197
+#, python-brace-format
+msgid "No pinned book at position {0}."
+msgstr ""
+
+#: frames/library/hotkey_manager.py:207 frames/player/navigation.py:205
+#, python-brace-format
+msgid "Playing pinned book: {0}"
+msgstr ""
+
+#: frames/library/hotkey_manager.py:220
+msgid "Already in Pinned Books"
+msgstr ""
+
+#: frames/library/hotkey_manager.py:240
+msgid "Already in Finished Books"
+msgstr ""
+
+#: frames/library/list_manager.py:55
+msgid "Error loading library data."
+msgstr ""
+
+#: frames/library/list_manager.py:139 frames/library/list_manager.py:147
+#: frames/library/list_manager.py:154
+#, python-brace-format
+msgid "{0} ({1}) [{2}]"
+msgstr ""
+
+#: frames/library/list_manager.py:147 frames/library/list_manager.py:154
+msgid "Virtual Shelf"
+msgstr ""
+
+#: frames/library/list_manager.py:190
+#, python-brace-format
+msgid "{0} items found."
+msgstr ""
+
+#: frames/library/list_manager.py:244
+msgid "Selected all items."
+msgstr ""
+
+#: frames/library/list_manager.py:296
+msgid "No shelves available."
+msgstr ""
+
+#: frames/library/list_manager.py:331
+#, python-brace-format
+msgid "Already in {0}"
+msgstr ""
+
+#: frames/library/list_manager.py:338
+#, python-brace-format
+msgid "Shelf {0} not found."
+msgstr ""
+
+#: frames/library/list_manager.py:343
+msgid "Already in All Books"
+msgstr ""
+
+#: frames/library/list_manager.py:384
+#, python-brace-format
+msgid "Book: {0}"
+msgstr ""
+
+#: frames/library/list_manager.py:426
+msgid "Already at root level."
+msgstr ""
+
+#: frames/library/list_manager.py:441
+msgid "No forward history."
+msgstr ""
+
+#: frames/library/menu_handlers.py:41 frames/library/menu_handlers.py:43
+msgid "Shelf created."
+msgstr ""
+
+#: frames/library/menu_handlers.py:55
+msgid "Refreshing library."
+msgstr ""
+
+#: frames/library/menu_handlers.py:108
+msgid "Log file not found."
+msgstr ""
+
+#: frames/library/menu_handlers.py:120
+msgid "Logs folder opened."
+msgstr ""
+
+#: frames/library/menu_handlers.py:123
+msgid "Could not open logs folder."
+msgstr ""
+
+#: frames/library/menu_handlers.py:130
+msgid "Save Database Backup"
+msgstr ""
+
+#: frames/library/menu_handlers.py:143
+msgid "Database exported successfully."
+msgstr ""
+
+#: frames/library/menu_handlers.py:147
+msgid "Error exporting database."
+msgstr ""
+
+#: frames/library/menu_handlers.py:148
+#, python-brace-format
+msgid ""
+"Failed to export database.\n"
+"Error: {0}"
+msgstr ""
+
+#: frames/library/menu_handlers.py:148 frames/library/menu_handlers.py:188
+#: frames/library_frame.py:396 frames/library_frame.py:471
+#: frames/library_frame.py:482 updater.py:217 updater.py:268
+msgid "Error"
+msgstr ""
+
+#: frames/library/menu_handlers.py:158
+msgid ""
+"WARNING: Importing a database will overwrite your current library and "
+"settings.\n"
+"This action cannot be undone.\n"
+"\n"
+"The application will close immediately after import.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: frames/library/menu_handlers.py:163
+msgid "Confirm Import"
+msgstr ""
+
+#: frames/library/menu_handlers.py:168
+msgid "Select Database Backup"
+msgstr ""
+
+#: frames/library/menu_handlers.py:179
+msgid "Import successful. Application will close."
+msgstr ""
+
+#: frames/library/menu_handlers.py:180
+msgid ""
+"Database imported successfully.\n"
+"Please restart AudioShelf."
+msgstr ""
+
+#: frames/library/menu_handlers.py:180
+msgid "Import Complete"
+msgstr ""
+
+#: frames/library/menu_handlers.py:187
+msgid "Error importing database."
+msgstr ""
+
+#: frames/library/menu_handlers.py:188
+#, python-brace-format
+msgid ""
+"Failed to import database.\n"
+"Error: {0}"
+msgstr ""
+
+#: frames/library/menu_handlers.py:210
+#, python-brace-format
+msgid "Processing {0}..."
+msgstr ""
+
+#: frames/library/menu_handlers.py:263
+msgid "No valid items found."
+msgstr ""
+
+#: frames/library/menu_handlers.py:267
+#, python-brace-format
+msgid "1 book added ({0} failed)."
+msgstr ""
+
+#: frames/library/menu_handlers.py:269
+#, python-brace-format
+msgid "{0} books added ({1} failed)."
+msgstr ""
+
+#: frames/library/menu_handlers.py:272
+msgid "1 book added."
+msgstr ""
+
+#: frames/library/menu_handlers.py:274
+#, python-brace-format
+msgid "{0} books added."
+msgstr ""
+
+#: frames/library/menu_handlers.py:277
+#, python-brace-format
+msgid "Failed to add {0} items."
+msgstr ""
+
+#: frames/library/menu_handlers.py:303
+#, python-brace-format
+msgid "Processing {0} items..."
+msgstr ""
+
+#: frames/library/menu_handlers.py:311 frames/library/menu_handlers.py:313
+msgid "Clipboard empty."
+msgstr ""
+
+#: frames/library/menu_handlers.py:316
+msgid "Error processing clipboard."
+msgstr ""
+
+#: frames/library/menu_handlers.py:325
+msgid ""
+"WARNING: This will remove ALL books, shelves, and history from AudioShelf.\n"
+"Your actual audio files on the disk will NOT be deleted.\n"
+"\n"
+"Are you sure you want to reset your library?"
+msgstr ""
+
+#: frames/library/menu_handlers.py:331
+msgid "Clear Library"
+msgstr ""
+
+#: frames/library/menu_handlers.py:333
+msgid "Yes, remove all books and reset the library"
+msgstr ""
+
+#: frames/library/menu_handlers.py:334
+msgid "Clear Everything"
+msgstr ""
+
+#: frames/library/menu_handlers.py:344
+msgid "Clearing library..."
+msgstr ""
+
+#: frames/library/menu_handlers.py:348
+msgid "Library cleared successfully."
+msgstr ""
+
+#: frames/library/menu_handlers.py:357
+msgid "Error clearing library."
+msgstr ""
+
+#: frames/library/search_handlers.py:85
+msgid "Searching..."
+msgstr ""
+
+#: frames/library/search_handlers.py:126
+msgid "Error during search."
+msgstr ""
+
+#: frames/library/search_handlers.py:145
+msgid "No books found."
+msgstr ""
+
+#: frames/library/search_handlers.py:155
+#, python-brace-format
+msgid "{0} books found."
+msgstr ""
+
+#: frames/library/search_handlers.py:229
+msgid "Error building search playlist."
+msgstr ""
+
+#: frames/library/task_handlers.py:51
+msgid "Choose a book folder to add..."
+msgstr ""
+
+#: frames/library/task_handlers.py:70
+msgid "Audio Files"
+msgstr ""
+
+#: frames/library/task_handlers.py:70
+msgid "All Files"
+msgstr ""
+
+#: frames/library/task_handlers.py:72
+msgid "Choose an audio file..."
+msgstr ""
+
+#: frames/library/task_handlers.py:94
+msgid "Invalid path or file does not exist."
+msgstr ""
+
+#: frames/library/task_handlers.py:101
+msgid "Adding book..."
+msgstr ""
+
+#: frames/library/task_handlers.py:282
+msgid "No playable files found."
+msgstr ""
+
+#: frames/library/task_handlers.py:292
+msgid "Book added with imported data."
+msgstr ""
+
+#: frames/library/task_handlers.py:294
+msgid "Book added. Analyzing metadata in background..."
+msgstr ""
+
+#: frames/library/task_handlers.py:302
+msgid "Error: Book already exists or import failed."
+msgstr ""
+
+#: frames/library/task_handlers.py:307
+msgid "An error occurred while adding the book."
+msgstr ""
+
+#: frames/library/task_handlers.py:415
+msgid "No playable files found in new location."
+msgstr ""
+
+#: frames/library/task_handlers.py:419
+msgid "Book location updated."
+msgstr ""
+
+#: frames/library/task_handlers.py:423
+msgid "An error occurred during update."
+msgstr ""
+
+#: frames/library/task_handlers.py:435
+msgid "Already processing. Please wait."
+msgstr ""
+
+#: frames/library/task_handlers.py:439
+msgid "Checking for missing books... Please wait."
+msgstr ""
+
+#: frames/library/task_handlers.py:453
+msgid "Error checking for missing books."
+msgstr ""
+
+#: frames/library/task_handlers.py:474
+msgid "No missing books found."
+msgstr ""
+
+#: frames/library/task_handlers.py:478
+#, python-brace-format
+msgid ""
+"Found {0} books whose folders seem to be missing. Remove them from the "
+"library?"
+msgstr ""
+
+#: frames/library/task_handlers.py:483
+msgid "Clear Missing Books"
+msgstr ""
+
+#: frames/library/task_handlers.py:485
+msgid "Removing missing books..."
+msgstr ""
+
+#: frames/library/task_handlers.py:489
+#, python-brace-format
+msgid "{0} books removed."
+msgstr ""
+
+#: frames/library/task_handlers.py:497
+msgid "Error removing missing books."
+msgstr ""
+
+#: frames/library/task_handlers.py:501
+msgid "Clear missing books cancelled."
+msgstr ""
+
+#: frames/library_frame.py:138
+msgid "Welcome to AudioShelf!"
+msgstr ""
+
+#: frames/library_frame.py:143 frames/library_frame.py:146
+msgid "Search:"
+msgstr ""
+
+#: frames/library_frame.py:145
+msgid "Type to filter books or shelves"
+msgstr ""
+
+#: frames/library_frame.py:163 frames/library_frame.py:164
+msgid "Library"
+msgstr ""
+
+#: frames/library_frame.py:187 frames/library_frame.py:188
+msgid "Search Results"
+msgstr ""
+
+#: frames/library_frame.py:330
+msgid "&Add Book Folder...\tCtrl+O"
+msgstr ""
+
+#: frames/library_frame.py:332
+msgid "Add Single &File...\tCtrl+Shift+O"
+msgstr ""
+
+#: frames/library_frame.py:334
+msgid "Create &New Shelf...\tCtrl+N"
+msgstr ""
+
+#: frames/library_frame.py:336
+msgid "&Refresh Library\tF5"
+msgstr ""
+
+#: frames/library_frame.py:339
+msgid "&Exit\tAlt+F4"
+msgstr ""
+
+#: frames/library_frame.py:341
+msgid "&File"
+msgstr ""
+
+#: frames/library_frame.py:345
+msgid "Clear Missing Books..."
+msgstr ""
+
+#: frames/library_frame.py:348
+msgid "Clear Library..."
+msgstr ""
+
+#: frames/library_frame.py:353
+msgid "&Backup Database..."
+msgstr ""
+
+#: frames/library_frame.py:356
+msgid "&Import Database..."
+msgstr ""
+
+#: frames/library_frame.py:361
+msgid "&Settings..."
+msgstr ""
+
+#: frames/library_frame.py:363
+msgid "&Tools"
+msgstr ""
+
+#: frames/library_frame.py:367
+msgid "&User Guide...\tF1"
+msgstr ""
+
+#: frames/library_frame.py:369
+msgid "&Keyboard Shortcuts...\tShift+F1"
+msgstr ""
+
+#: frames/library_frame.py:374
+msgid "Check for &Updates..."
+msgstr ""
+
+#: frames/library_frame.py:377
+msgid "What's &New..."
+msgstr ""
+
+#: frames/library_frame.py:380
+msgid "Open &Logs Folder"
+msgstr ""
+
+#: frames/library_frame.py:383
+msgid "&About AudioShelf..."
+msgstr ""
+
+#: frames/library_frame.py:385
+msgid "&Help"
+msgstr ""
+
+#: frames/library_frame.py:396
+msgid "Error starting playback."
+msgstr ""
+
+#: frames/library_frame.py:425
+msgid "Error opening player."
+msgstr ""
+
+#: frames/library_frame.py:425
+msgid "Player Error"
+msgstr ""
+
+#: frames/library_frame.py:466
+#, python-brace-format
+msgid ""
+"A new version ({0}) is available.\n"
+"Do you want to download and install it now?"
+msgstr ""
+
+#: frames/library_frame.py:468
+msgid "Update Available"
+msgstr ""
+
+#: frames/library_frame.py:471
+#, python-brace-format
+msgid ""
+"Update check failed.\n"
+"Error: {0}"
+msgstr ""
+
+#: frames/library_frame.py:474
+msgid "You are using the latest version."
+msgstr ""
+
+#: frames/library_frame.py:474
+msgid "No Update"
+msgstr ""
+
+#: frames/library_frame.py:482
+#, python-brace-format
+msgid ""
+"Download failed.\n"
+"Error: {0}"
+msgstr ""
+
+#: frames/player/actions_logic.py:22
+#, python-brace-format
+msgid "Quick Bookmark at {0}"
+msgstr ""
+
+#: frames/player/actions_logic.py:31
+msgid "Quick Bookmark added"
+msgstr ""
+
+#: frames/player/actions_logic.py:34 frames/player/dialog_manager.py:106
+msgid "Error adding bookmark"
+msgstr ""
+
+#: frames/player/actions_logic.py:43 frames/player/dialog_manager.py:192
+msgid "Error: Sleep Timer not available."
+msgstr ""
+
+#: frames/player/actions_logic.py:60
+#, python-brace-format
+msgid "Quick timer set for {0} minutes. Action: {1}"
+msgstr ""
+
+#: frames/player/actions_logic.py:62
+msgid "Error starting quick timer."
+msgstr ""
+
+#: frames/player/actions_logic.py:66
+msgid "Error: Could not load quick timer settings."
+msgstr ""
+
+#: frames/player/actions_logic.py:75 frames/player/dialog_manager.py:238
+msgid "Sleep timer cancelled."
+msgstr ""
+
+#: frames/player/actions_logic.py:77
+msgid "No active sleep timer to cancel."
+msgstr ""
+
+#: frames/player/book_loader.py:23 frames/player_frame.py:66
+msgid "Unknown Book"
+msgstr ""
+
+#: frames/player/book_loader.py:93
+msgid "Error loading book data. Please check logs."
+msgstr ""
+
+#: frames/player/book_loader.py:93
+msgid "Load Error"
+msgstr ""
+
+#: frames/player/book_loader.py:111
+msgid "Error: No audio files found for this book."
+msgstr ""
+
+#: frames/player/book_loader.py:112 frames/player/book_loader.py:142
+msgid "Playback Error"
+msgstr ""
+
+#: frames/player/book_loader.py:141
+msgid "Error: Could not load the audio file."
+msgstr ""
+
+#: frames/player/controls.py:114
+msgid "End of file"
+msgstr ""
+
+#: frames/player/controls.py:192
+msgid "On"
+msgstr ""
+
+#: frames/player/controls.py:192
+msgid "Off"
+msgstr ""
+
+#: frames/player/controls.py:193
+#, python-brace-format
+msgid "Equalizer {0}"
+msgstr ""
+
+#: frames/player/dialog_manager.py:87
+msgid "Bookmark added"
+msgstr ""
+
+#: frames/player/dialog_manager.py:108
+msgid "Bookmark cancelled"
+msgstr ""
+
+#: frames/player/dialog_manager.py:122
+msgid "Jumping to bookmark"
+msgstr ""
+
+#: frames/player/dialog_manager.py:146 frames/player/seek_logic.py:81
+#, python-brace-format
+msgid "Jumped to {0}"
+msgstr ""
+
+#: frames/player/dialog_manager.py:170
+msgid "Jumping to file"
+msgstr ""
+
+#: frames/player/dialog_manager.py:181 frames/player/dialog_manager.py:278
+msgid "Error: The selected file is missing."
+msgstr ""
+
+#: frames/player/dialog_manager.py:184 frames/player/dialog_manager.py:281
+msgid "Error jumping to file."
+msgstr ""
+
+#: frames/player/dialog_manager.py:224
+#, python-brace-format
+msgid "Sleep timer set for {0} minutes."
+msgstr ""
+
+#: frames/player/dialog_manager.py:226
+msgid "Error starting timer."
+msgstr ""
+
+#: frames/player/dialog_manager.py:233
+msgid "Quick timer defaults saved."
+msgstr ""
+
+#: frames/player/dialog_manager.py:236
+msgid "Error saving defaults."
+msgstr ""
+
+#: frames/player/dialog_manager.py:248
+msgid "No files loaded."
+msgstr ""
+
+#: frames/player/dialog_manager.py:263
+#, python-brace-format
+msgid "Already on file {0}."
+msgstr ""
+
+#: frames/player/dialog_manager.py:267
+#, python-brace-format
+msgid "Jumping to file {0}"
+msgstr ""
+
+#: frames/player/dialog_manager.py:283
+msgid "Cancelled."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:26
+msgid "(Custom)"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:44
+msgid "Equalizer"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:94
+msgid "Presets"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:100
+msgid "&Preset:"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:101
+msgid "Loading..."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:106
+msgid "&Save As New Preset..."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:107
+msgid "&Delete Selected Preset"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:120
+msgid "Bands"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:147
+msgid "0 dB"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:160
+msgid "&Enable Equalizer (E)"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:161
+msgid "&Reset"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:162
+msgid "&Close (Esc)"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:213
+msgid "Reset"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:259
+msgid "Enter a name for this preset:"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:259
+msgid "Save Preset"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:267
+msgid "Error: A preset with this name already exists."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:269
+msgid "Preset saved."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:274
+msgid "Error saving preset."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:281
+msgid "No preset selected to delete."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:289
+msgid "Cannot delete default presets."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:292
+#, python-brace-format
+msgid "Are you sure you want to delete preset '{0}'?"
+msgstr ""
+
+#: frames/player/equalizer_frame.py:296
+msgid "Preset deleted."
+msgstr ""
+
+#: frames/player/equalizer_frame.py:301
+msgid "Error deleting preset."
+msgstr ""
+
+#: frames/player/info.py:42 frames/player/info.py:193
+#, python-brace-format
+msgid "You have listened to {0} of {1}"
+msgstr ""
+
+#: frames/player/info.py:58
+msgid "Time copied."
+msgstr ""
+
+#: frames/player/info.py:81 frames/player/info.py:107
+#: frames/player/seek_logic.py:95 frames/player/seek_logic.py:106
+msgid "File duration not yet known."
+msgstr ""
+
+#: frames/player/info.py:91 frames/player/info.py:212
+#, python-brace-format
+msgid "{0} remaining of {1}"
+msgstr ""
+
+#: frames/player/info.py:110 frames/player/info.py:226
+msgid "Playback speed is zero."
+msgstr ""
+
+#: frames/player/info.py:119
+#, python-brace-format
+msgid "{0} remaining until the end of the file at current speed"
+msgstr ""
+
+#: frames/player/info.py:134
+msgid "Unknown action"
+msgstr ""
+
+#: frames/player/info.py:139 frames/player/info.py:147
+msgid "No active sleep timer."
+msgstr ""
+
+#: frames/player/info.py:155
+#, python-brace-format
+msgid "{0} minutes {1} seconds remaining until: {2}"
+msgstr ""
+
+#: frames/player/info.py:157
+#, python-brace-format
+msgid "{0} seconds remaining until: {1}"
+msgstr ""
+
+#: frames/player/info.py:183 frames/player/info.py:201
+#: frames/player/info.py:220
+msgid "Book duration data not available."
+msgstr ""
+
+#: frames/player/info.py:236
+#, python-brace-format
+msgid "{0} remaining for the entire book at current speed"
+msgstr ""
+
+#: frames/player/loop_logic.py:21
+msgid "Loop start updated"
+msgstr ""
+
+#: frames/player/loop_logic.py:25
+msgid "Loop start set, previous end cleared"
+msgstr ""
+
+#: frames/player/loop_logic.py:27
+msgid "Loop start point set"
+msgstr ""
+
+#: frames/player/loop_logic.py:35
+msgid "Error: Loop start point (A) not set"
+msgstr ""
+
+#: frames/player/loop_logic.py:42
+msgid "Error: Loop end point must be after start point"
+msgstr ""
+
+#: frames/player/loop_logic.py:49
+msgid "Loop activated"
+msgstr ""
+
+#: frames/player/loop_logic.py:59
+msgid "Loop deactivated"
+msgstr ""
+
+#: frames/player/loop_logic.py:72
+msgid "Repeat file on"
+msgstr ""
+
+#: frames/player/loop_logic.py:74
+msgid "Repeat file off"
+msgstr ""
+
+#: frames/player/navigation.py:28
+msgid "Error: Bookmark refers to a non-existent file."
+msgstr ""
+
+#: frames/player/navigation.py:35
+msgid "Error: The file for this bookmark is missing."
+msgstr ""
+
+#: frames/player/navigation.py:55
+msgid "Error: Could not jump to bookmark file."
+msgstr ""
+
+#: frames/player/navigation.py:68 frames/player/navigation.py:101
+msgid "No bookmarks in this book."
+msgstr ""
+
+#: frames/player/navigation.py:81
+#, python-brace-format
+msgid "Next bookmark: {0}"
+msgstr ""
+
+#: frames/player/navigation.py:85
+msgid "End of bookmarks reached."
+msgstr ""
+
+#: frames/player/navigation.py:88
+msgid "Error finding next bookmark."
+msgstr ""
+
+#: frames/player/navigation.py:114
+#, python-brace-format
+msgid "Previous bookmark: {0}"
+msgstr ""
+
+#: frames/player/navigation.py:118
+msgid "Start of bookmarks reached."
+msgstr ""
+
+#: frames/player/navigation.py:121
+msgid "Error finding previous bookmark."
+msgstr ""
+
+#: frames/player/navigation.py:131 frames/player/navigation.py:160
+msgid "Only one book in list."
+msgstr ""
+
+#: frames/player/navigation.py:136
+msgid "End of library list reached."
+msgstr ""
+
+#: frames/player/navigation.py:141
+#, python-brace-format
+msgid "Next book: {0}"
+msgstr ""
+
+#: frames/player/navigation.py:147 frames/player/navigation.py:150
+#: frames/player/navigation.py:176 frames/player/navigation.py:179
+msgid "Error switching book."
+msgstr ""
+
+#: frames/player/navigation.py:165
+msgid "Start of library list reached."
+msgstr ""
+
+#: frames/player/navigation.py:170
+#, python-brace-format
+msgid "Previous book: {0}"
+msgstr ""
+
+#: frames/player/navigation.py:202
+#, python-brace-format
+msgid "Already playing: {0}"
+msgstr ""
+
+#: frames/player/navigation.py:216
+msgid "Error switching to pinned book."
+msgstr ""
+
+#: frames/player/playback_logic.py:68
+msgid "Paused"
+msgstr ""
+
+#: frames/player/playback_logic.py:93
+#, python-brace-format
+msgid "Smart Resume: {0} seconds back"
+msgstr ""
+
+#: frames/player/playback_logic.py:102
+msgid "Playing"
+msgstr ""
+
+#: frames/player/playback_logic.py:124 frames/player/playback_logic.py:157
+msgid "End of book"
+msgstr ""
+
+#: frames/player/playback_logic.py:150
+msgid "End of book. Looping."
+msgstr ""
+
+#: frames/player/playback_logic.py:154
+msgid "End of book. Closing."
+msgstr ""
+
+#: frames/player/playback_logic.py:179
+msgid "Start of book"
+msgstr ""
+
+#: frames/player/playback_logic.py:208
+msgid "Stopped."
+msgstr ""
+
+#: frames/player/seek_logic.py:55
+#, python-brace-format
+msgid "{0} forward"
+msgstr ""
+
+#: frames/player/seek_logic.py:57
+#, python-brace-format
+msgid "{0} back"
+msgstr ""
+
+#: frames/player/seek_logic.py:88
+msgid "Restart file"
+msgstr ""
+
+#: frames/player/seek_logic.py:99
+msgid "Jumping to 50 percent"
+msgstr ""
+
+#: frames/player/seek_logic.py:110
+msgid "Jumping to 30 seconds from end"
+msgstr ""
+
+#: frames/player/speed_logic.py:42 frames/player/speed_logic.py:82
+msgid "Speed limit reached"
+msgstr ""
+
+#: frames/player/speed_logic.py:49 frames/player/speed_logic.py:86
+#: frames/player/speed_logic.py:92 frames/player/speed_logic.py:116
+#, python-brace-format
+msgid "Speed {0}x"
+msgstr ""
+
+#: frames/player/speed_logic.py:106
+#, python-brace-format
+msgid "Speed restored to {0}x"
+msgstr ""
+
+#: frames/player/speed_logic.py:112
+msgid "Speed reset to 1.0x"
+msgstr ""
+
+#: frames/player/volume_logic.py:23
+#, python-brace-format
+msgid "Volume {0}%"
+msgstr ""
+
+#: frames/player/volume_logic.py:28
+msgid "System volume control unavailable"
+msgstr ""
+
+#: frames/player/volume_logic.py:42
+#, python-brace-format
+msgid "System Volume {0}%"
+msgstr ""
+
+#: frames/player/volume_logic.py:45
+msgid "System Volume Error"
+msgstr ""
+
+#: frames/player_frame.py:152
+msgid "Playback Engine Error"
+msgstr ""
+
+#: nvda_controller.py:160
+#, python-brace-format
+msgid "Verbosity: {0}"
+msgstr ""
+
+#: playback/engine_factory.py:65
+msgid ""
+"The playback engine (libmpv) is not installed or could not be loaded. Please "
+"reinstall the application."
+msgstr ""
+
+#: playback/engine_factory.py:68
+#, python-brace-format
+msgid "An unexpected error occurred while initializing the playback engine: {}"
+msgstr ""
+
+#: playback/mpv_engine.py:70
+msgid ""
+"Critical Error: The playback engine (libmpv-2.dll) is missing or "
+"incompatible.\n"
+"Please reinstall the application."
+msgstr ""
+
+#: playback/mpv_engine.py:73
+#, python-brace-format
+msgid "The playback engine could not be initialized. Details: {}"
+msgstr ""
+
+#: updater.py:130
+msgid "No matching update file found."
+msgstr ""
+
+#: updater.py:217
+#, python-brace-format
+msgid ""
+"Failed to launch installer:\n"
+"{0}"
+msgstr ""
+
+#: updater.py:268
+#, python-brace-format
+msgid ""
+"Portable update failed:\n"
+"{0}"
+msgstr ""
+
+#: utils.py:46
+#, python-brace-format
+msgid "1 minute"
+msgid_plural "{0} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: utils.py:50
+#, python-brace-format
+msgid "1 second"
+msgid_plural "{0} seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: utils.py:195
+#, python-brace-format
+msgid "The sleep timer has expired. Proceed with action: {0}?"
+msgstr ""
+
+#: utils.py:196
+msgid "Confirm Action"
+msgstr ""

@@ -124,6 +124,17 @@ AudioShelf is a free and open-source project developed with passion.
 
 ---
 
+## 🌍 Translation & Localization
+
+AudioShelf aims to be accessible to everyone. We are currently looking for contributors to help translate the app into more languages!
+
+If you would like to help:
+1. Download the template: [`locale/AudioShelf.pot`](./locale/AudioShelf.pot).
+2. Translate it using [Poedit](https://poedit.net/).
+3. Submit a Pull Request or contact the maintainer.
+
+---
+
 ## 📜 License
 
 Copyright (c) 2025-2026 Mehdi Rajabi.
