@@ -151,7 +151,7 @@ def _build_book_menu(frame, book_id: int, source: str, selected_count: int):
         
         for (shelf_id, shelf_name, _ignored) in frame.shelves_data:
             shelf_menu_id = wx.NewIdRef()
-            move_shelf_item = wx.MenuItem(move_menu, shelf_menu_id, shelf_name)
+            move_shelf_item = wx.MenuItem(move_menu, shelf_menu_id, _(shelf_name))
             move_menu.Append(move_shelf_item)
 
             from . import context_actions

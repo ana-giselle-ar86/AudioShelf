@@ -260,7 +260,7 @@ class SearchManager:
         try:
             for (sid, sname, books_list) in getattr(frame, 'shelves_data', []):
                 if sid == shelf_id:
-                    shelf_name = sname
+                    shelf_name = _(sname)
                     break
         except Exception:
             pass

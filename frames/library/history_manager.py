@@ -157,7 +157,7 @@ class HistoryManager:
         except Exception:
             pass
 
-        status_text = _("Book: {0} | In: {1}").format(title, shelf_name)
+        status_text = _("Book: {0} | In: {1}").format(title, _(shelf_name))
         frame.SetStatusText(status_text)
         event.Skip()
 

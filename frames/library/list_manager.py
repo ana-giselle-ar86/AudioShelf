@@ -136,7 +136,7 @@ class LibraryListManager:
                                 book_matches = True
                                 break
                     if shelf_matches or book_matches:
-                        label = _("{0} ({1}) [{2}]").format(shelf_name, len(books), _("Shelf"))
+                        label = _("{0} ({1}) [{2}]").format(_(shelf_name), len(books), _("Shelf"))
                         add_item(label, 'shelf', shelf_id)
                         items_added += 1
 
@@ -354,7 +354,7 @@ class LibraryListManager:
         frame.search_ctrl.SetValue("")
         self.populate_library_list(frame, index_to_select=0)
         frame.library_list.SetFocus()
-        speak(f"{shelf_name}", LEVEL_MINIMAL)
+        speak(_(shelf_name), LEVEL_MINIMAL)
 
     def on_list_focus_changed(self, frame, event: wx.ListEvent):
         """Updates status bar on focus change."""
