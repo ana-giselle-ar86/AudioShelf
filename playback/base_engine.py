@@ -184,3 +184,30 @@ class BasePlaybackEngine(ABC):
     def release(self):
         """Releases all resources held by the engine (e.g., on application exit)."""
         pass
+
+    # --- Chapters ---
+
+    @abstractmethod
+    def get_chapters(self) -> List[dict]:
+        """Returns a list of chapters for the current file."""
+        pass
+
+    @abstractmethod
+    def get_current_chapter(self) -> Optional[int]:
+        """Returns the 0-based index of the current chapter."""
+        pass
+
+    @abstractmethod
+    def next_chapter(self) -> bool:
+        """Jumps to the next chapter."""
+        pass
+
+    @abstractmethod
+    def previous_chapter(self) -> bool:
+        """Jumps to the previous chapter."""
+        pass
+
+    @abstractmethod
+    def jump_to_chapter(self, index: int) -> bool:
+        """Jumps to a specific chapter index."""
+        pass

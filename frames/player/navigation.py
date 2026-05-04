@@ -3,6 +3,7 @@
 # License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import logging
+import re
 from typing import Dict, Any
 from database import db_manager
 from i18n import _
@@ -214,3 +215,39 @@ def play_pinned_book_by_index(frame, index: int):
     except Exception as e:
         logging.error(f"Error in play_pinned_book_by_index: {e}", exc_info=True)
         speak(_("Error switching to pinned book."), LEVEL_CRITICAL)
+
+def next_chapter(frame):
+    if not frame.engine:
+        return
+    if frame.engine.next_chapter():
+        idx = frame.engine.get_current_chapter()
+        chapters = frame.engine.get_chapters()
+        if idx is not None and chapters and idx < len(chapters):
+            title = chapters[idx].get('title', _('Chapter {0}').format(idx + 1))
+            title = re.sub(r'^\d+[\s\-\.]*', '', title)
+            title = re.sub(r'[\s\-\.]*\d+$', '', title)
+            if not title.strip():
+                title = _('Chapter {0}').format(idx + 1)
+            speak(title, LEVEL_MINIMAL)
+        else:
+            speak(_("Next chapter"), LEVEL_MINIMAL)
+    else:
+        speak(_("No next chapter"), LEVEL_MINIMAL)
+
+def prev_chapter(frame):
+    if not frame.engine:
+        return
+    if frame.engine.previous_chapter():
+        idx = frame.engine.get_current_chapter()
+        chapters = frame.engine.get_chapters()
+        if idx is not None and chapters and idx < len(chapters):
+            title = chapters[idx].get('title', _('Chapter {0}').format(idx + 1))
+            title = re.sub(r'^\d+[\s\-\.]*', '', title)
+            title = re.sub(r'[\s\-\.]*\d+$', '', title)
+            if not title.strip():
+                title = _('Chapter {0}').format(idx + 1)
+            speak(title, LEVEL_MINIMAL)
+        else:
+            speak(_("Previous chapter"), LEVEL_MINIMAL)
+    else:
+        speak(_("No previous chapter"), LEVEL_MINIMAL)
