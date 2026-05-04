@@ -122,13 +122,8 @@ Section "Install" SecInstall
     Call CreateDesktopShortcut
   ${EndIf}
 
-  WriteRegStr HKCR "Directory\shell\AudioShelf" "" "Add to AudioShelf Library"
-  WriteRegStr HKCR "Directory\shell\AudioShelf" "Icon" "$INSTDIR\${APP_EXE_NAME}"
-  WriteRegStr HKCR "Directory\shell\AudioShelf\command" "" '"$INSTDIR\${APP_EXE_NAME}" "%1"'
-  
-  WriteRegStr HKCR "*\shell\AudioShelf" "" "Add to AudioShelf Library"
-  WriteRegStr HKCR "*\shell\AudioShelf" "Icon" "$INSTDIR\${APP_EXE_NAME}"
-  WriteRegStr HKCR "*\shell\AudioShelf\command" "" '"$INSTDIR\${APP_EXE_NAME}" "%1"'
+  DeleteRegKey HKCR "Directory\shell\AudioShelf"
+  DeleteRegKey HKCR "*\shell\AudioShelf"
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "DisplayName" "${APP_NAME}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "UninstallString" '"$INSTDIR\uninstall.exe"'
@@ -150,6 +145,8 @@ Section "Uninstall"
 
   DeleteRegKey HKCR "Directory\shell\AudioShelf"
   DeleteRegKey HKCR "*\shell\AudioShelf"
+  DeleteRegKey HKCU "Software\Classes\Directory\shell\AudioShelf"
+  DeleteRegKey HKCU "Software\Classes\*\shell\AudioShelf"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
   DeleteRegKey HKLM "Software\${APP_NAME}"
 
