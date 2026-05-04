@@ -14,7 +14,9 @@ from dialogs import (
     goto_dialog,
     filelist_dialog,
     sleep_timer_dialog,
-    goto_file_dialog
+    goto_file_dialog,
+    chapterlist_dialog,
+    goto_chapter_dialog
 )
 from . import navigation
 from . import playback_logic
@@ -279,6 +281,87 @@ class DialogManager:
                 except Exception as e:
                     logging.error(f"Error in on_goto_file: {e}", exc_info=True)
                     speak(_("Error jumping to file."), LEVEL_CRITICAL)
+        else:
+            speak(_("Cancelled."), LEVEL_MINIMAL)
+        
+        dlg.Destroy()
+        self._dialog_exit(was_playing)
+
+    def on_show_chapters(self):
+        """Opens the 'Chapter List' dialog."""
+        was_playing = self._dialog_entry()
+        chapters = self.frame.engine.get_chapters() if self.frame.engine else []
+        if not chapters:
+            speak(_("No chapters found."), LEVEL_CRITICAL)
+            self._dialog_exit(was_playing)
+            return
+
+        current_chapter = self.frame.engine.get_current_chapter() if self.frame.engine else 0
+        if current_chapter is None:
+            current_chapter = 0
+        from dialogs.chapterlist_dialog import ChapterListDialog
+        dlg = ChapterListDialog(self.frame, chapters, current_chapter)
+        result = dlg.ShowModal()
+        
+        if result == wx.ID_OK:
+            selected_index = dlg.get_selected_index()
+            if selected_index != wx.NOT_FOUND and selected_index != current_chapter:
+                try:
+                    if self.frame.engine:
+                         self.frame.engine.jump_to_chapter(selected_index)
+                         speak(_("Jumping to chapter"), LEVEL_MINIMAL)
+                    
+                    resume_setting = db_manager.get_setting('resume_on_jump')
+                    should_resume = (resume_setting == 'True' or resume_setting is None)
+
+                    if not was_playing and should_resume:
+                        wx.CallLater(100, playback_logic.toggle_play_pause, self.frame)
+                
+                except Exception as e:
+                    logging.error(f"Error in on_show_chapters: {e}", exc_info=True)
+                    speak(_("Error jumping to chapter."), LEVEL_CRITICAL)
+        
+        dlg.Destroy()
+        self._dialog_exit(was_playing)
+
+    def on_goto_chapter(self):
+        """Opens the 'Go To Chapter Number' dialog."""
+        was_playing = self._dialog_entry()
+        chapters = self.frame.engine.get_chapters() if self.frame.engine else []
+        chapter_count = len(chapters)
+        if chapter_count == 0:
+            speak(_("No chapters found."), LEVEL_CRITICAL)
+            self._dialog_exit(was_playing)
+            return
+
+        current_chapter_num = (self.frame.engine.get_current_chapter() if self.frame.engine else 0) + 1
+        from dialogs.goto_chapter_dialog import GoToChapterDialog
+        dlg = GoToChapterDialog(
+            self.frame,
+            current_chapter_num=current_chapter_num,
+            max_chapter_num=chapter_count
+        )
+        result = dlg.ShowModal()
+        
+        if result == wx.ID_OK:
+            target_index = dlg.get_selected_index()
+            if target_index == current_chapter_num - 1:
+                speak(_("Already on chapter {0}.").format(target_index + 1), LEVEL_MINIMAL)
+            else:
+                try:
+                    if self.frame.engine:
+                        self.frame.engine.jump_to_chapter(target_index)
+                        speak(_("Jumping to chapter {0}").format(target_index + 1), LEVEL_MINIMAL)
+                    
+                    resume_setting = db_manager.get_setting('resume_on_jump')
+                    should_resume = (resume_setting == 'True' or resume_setting is None)
+
+                    if not was_playing and should_resume:
+                        wx.CallLater(100, playback_logic.toggle_play_pause, self.frame)
+                
+                except Exception as e:
+                    logging.error(f"Error in on_goto_chapter: {e}", exc_info=True)
+                    speak(_("Error jumping to chapter."), LEVEL_CRITICAL)
         else:
             speak(_("Cancelled."), LEVEL_MINIMAL)
         
