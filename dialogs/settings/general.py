@@ -11,19 +11,20 @@ import winreg
 
 SETTING_LANGUAGE = 'language'
 SETTING_CHECK_UPDATES = 'check_updates_on_startup'
+SETTING_AUTO_SCAN_FOLDER = 'auto_scan_folder'
 
 
 class TabPanel(wx.Panel):
     """
     The "General" settings tab.
-    Handles application language selection and startup update checks.
+    Handles application language selection, auto-scan folder, and startup update checks.
     """
-
     def __init__(self, parent):
         super(TabPanel, self).__init__(parent)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # Language Settings
         lang_box = wx.StaticBox(self, label=_("Language"))
         lang_box_sizer = wx.StaticBoxSizer(lang_box, wx.VERTICAL)
 
@@ -51,8 +52,30 @@ class TabPanel(wx.Panel):
 
         main_sizer.Add(lang_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
 
+        # Auto-Scan Folder Settings
+        folder_box = wx.StaticBox(self, label=_("Auto-Scan Folder"))
+        folder_box_sizer = wx.StaticBoxSizer(folder_box, wx.VERTICAL)
+
+        folder_label = wx.StaticText(self, label=_("Select a folder to automatically scan for new books:"))
+        folder_box_sizer.Add(folder_label, 0, wx.ALL, 8)
+
+        folder_hz_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        self.folder_text = wx.TextCtrl(self, style=wx.BORDER_SUNKEN, name=_("Auto-Scan Folder Path"))
+        self.folder_text.SetMinSize((300, -1))
+        folder_hz_sizer.Add(self.folder_text, 1, wx.EXPAND | wx.RIGHT, 8)
+
+        self.browse_btn = wx.Button(self, label=_("Browse..."))
+        self.browse_btn.Bind(wx.EVT_BUTTON, self._on_browse_folder)
+        folder_hz_sizer.Add(self.browse_btn, 0, wx.ALIGN_CENTER_VERTICAL)
+
+        folder_box_sizer.Add(folder_hz_sizer, 0, wx.EXPAND | wx.ALL, 8)
+
+        main_sizer.Add(folder_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
+
         self.is_portable = self._check_is_portable()
 
+        # Windows Integration
         if sys.platform == "win32" and not self.is_portable:
             windows_box = wx.StaticBox(self, label=_("Windows Integration"))
             windows_box_sizer = wx.StaticBoxSizer(windows_box, wx.VERTICAL)
@@ -64,6 +87,7 @@ class TabPanel(wx.Panel):
         else:
             self.context_menu_checkbox = None
 
+        # Updates Settings
         update_box = wx.StaticBox(self, label=_("Updates"))
         update_box_sizer = wx.StaticBoxSizer(update_box, wx.VERTICAL)
 
@@ -81,6 +105,7 @@ class TabPanel(wx.Panel):
 
     def _load_settings(self):
         """Loads settings from the database."""
+
         current_lang = db_manager.get_setting(SETTING_LANGUAGE) or 'en'
         self.lang_combo.SetValue(self.lang_map_rev.get(current_lang, _("English (en)")))
 
@@ -90,6 +115,17 @@ class TabPanel(wx.Panel):
         check_updates = db_manager.get_setting(SETTING_CHECK_UPDATES)
         is_checked = (check_updates == 'True' or check_updates is None)
         self.update_checkbox.SetValue(is_checked)
+
+        current_folder = db_manager.get_setting(SETTING_AUTO_SCAN_FOLDER)
+        if not current_folder:
+            from database import _get_default_documents_folder
+            current_folder = os.path.join(_get_default_documents_folder(), "AudioShelf")
+            if not os.path.exists(current_folder):
+                try:
+                    os.makedirs(current_folder, exist_ok=True)
+                except OSError:
+                    pass
+        self.folder_text.SetValue(current_folder)
 
         if self.context_menu_checkbox:
             is_installed = self._is_context_menu_installed()
@@ -103,6 +139,8 @@ class TabPanel(wx.Panel):
 
         update_val = 'True' if self.update_checkbox.GetValue() else 'False'
         db_manager.set_setting(SETTING_CHECK_UPDATES, update_val)
+
+        db_manager.set_setting(SETTING_AUTO_SCAN_FOLDER, self.folder_text.GetValue().strip())
 
         if self.context_menu_checkbox:
             want_installed = self.context_menu_checkbox.GetValue()
@@ -158,7 +196,7 @@ class TabPanel(wx.Panel):
             cmd_key_all = winreg.CreateKey(key_all, "command")
             winreg.SetValueEx(cmd_key_all, "", 0, winreg.REG_SZ, f'"{exe_path}" "%1"')
         except Exception as e:
-            print(f"Failed to install context menu: {e}")
+            print(f"Error installing context menu: {e}")
 
     def _uninstall_context_menu(self):
         try:
@@ -180,3 +218,14 @@ class TabPanel(wx.Panel):
     def get_selected_language(self) -> str:
         """Returns the language code selected by the user."""
         return self.selected_lang_code
+
+    def _on_browse_folder(self, event):
+        current_path = self.folder_text.GetValue()
+        if not os.path.exists(current_path):
+            from database import _get_default_documents_folder
+            current_path = _get_default_documents_folder()
+            
+        dlg = wx.DirDialog(self, _("Select Auto-Scan Folder"), defaultPath=current_path, style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+        if dlg.ShowModal() == wx.ID_OK:
+            self.folder_text.SetValue(dlg.GetPath())
+        dlg.Destroy()
