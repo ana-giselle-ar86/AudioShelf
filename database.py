@@ -25,6 +25,26 @@ PORTABLE_MARKER_FILE = ".portable"
 LOCAL_DATA_DIR_NAME = "user_data"
 
 
+def _get_default_documents_folder() -> str:
+    """
+    Returns the user's default Documents folder path.
+    On Windows, it queries the registry to find the actual location.
+    """
+    if sys.platform == "win32":
+        try:
+            import winreg
+
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders") as key:
+
+                docs_path = winreg.QueryValueEx(key, "Personal")[0]
+                return os.path.expandvars(docs_path)
+        except Exception as e:
+            logging.error(f"Failed to get Documents folder from registry: {e}")
+            pass
+            
+    return os.path.join(os.path.expanduser("~"), "Documents")
+
+
 def _get_db_path_for_os() -> str:
     """
     Determines the database file path.
@@ -96,6 +116,12 @@ class DatabaseManager:
         self.ui_state_repo: Optional[UiStateRepository] = None
         self.eq_repo: Optional[EqualizerRepository] = None
 
+        default_auto_scan_folder = os.path.join(_get_default_documents_folder(), "AudioShelf")
+        try:
+            os.makedirs(default_auto_scan_folder, exist_ok=True)
+        except OSError as e:
+            logging.error(f"Failed to create auto-scan folder: {e}")
+
         self.default_settings = {
             'language': 'en',
             'nvda_verbosity': 'minimal',
@@ -115,6 +141,7 @@ class DatabaseManager:
             'smart_resume_rewind_ms': '10000',
             'master_volume': '100',
             'last_run_version': '0.0.0',
+            'auto_scan_folder': default_auto_scan_folder,
         }
 
         self.default_eq_presets = {
