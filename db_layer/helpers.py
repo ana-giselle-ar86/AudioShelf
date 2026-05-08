@@ -50,7 +50,7 @@ def find_missing_books(all_books: List[Tuple[int, str, str]]) -> List[Tuple[int,
     missing_books = []
     try:
         for book_id, title, root_path in all_books:
-            if not os.path.isdir(root_path):
+            if not os.path.exists(root_path):
                 missing_books.append((book_id, title))
         return missing_books
     except Exception as e:
