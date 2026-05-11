@@ -122,8 +122,8 @@ Section "Install" SecInstall
     Call CreateDesktopShortcut
   ${EndIf}
 
-  DeleteRegKey HKCR "Directory\shell\AudioShelf"
-  DeleteRegKey HKCR "*\shell\AudioShelf"
+  DeleteRegKey HKLM "Software\Classes\Directory\shell\AudioShelf"
+  DeleteRegKey HKLM "Software\Classes\*\shell\AudioShelf"
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "DisplayName" "${APP_NAME}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "UninstallString" '"$INSTDIR\uninstall.exe"'
