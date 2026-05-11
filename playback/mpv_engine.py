@@ -240,9 +240,12 @@ class MpvEngine(BasePlaybackEngine):
         return False
 
     def playlist_jump(self, index: int, start_time_ms: int = 0) -> bool:
-        """Jumps to a specific playlist index."""
         if self.player:
             try:
+                if self.player.playlist_pos == index:
+                    self.player.command('seek', start_time_ms / 1000.0, 'absolute')
+                    return True
+
                 self._is_initial_load = True
                 self._pending_start_time_ms = start_time_ms
                 self.player.playlist_pos = index
@@ -316,6 +319,59 @@ class MpvEngine(BasePlaybackEngine):
 
         else:
             logging.warning(f"MpvEngine does not support the event: '{event_name}'")
+
+    # --- Chapters ---
+
+    def get_chapters(self) -> List[dict]:
+        if not self.player: 
+            return []
+        try:
+
+            chapters = getattr(self.player, 'chapter_list', [])
+            return chapters if chapters else []
+        except Exception as e:
+            logging.error(f"Error getting chapters: {e}")
+            return []
+
+    def get_current_chapter(self) -> Optional[int]:
+        if not self.player:
+            return None
+        try:
+            return getattr(self.player, 'chapter', None)
+        except Exception:
+            return None
+
+    def next_chapter(self) -> bool:
+        if not self.player:
+            return False
+        try:
+
+            self.player.command('add', 'chapter', 1)
+            return True
+        except Exception as e:
+            logging.warning(f"Error skipping to next chapter: {e}")
+            return False
+
+    def previous_chapter(self) -> bool:
+        if not self.player:
+            return False
+        try:
+
+            self.player.command('add', 'chapter', -1)
+            return True
+        except Exception as e:
+            logging.warning(f"Error skipping to previous chapter: {e}")
+            return False
+
+    def jump_to_chapter(self, index: int) -> bool:
+        if not self.player:
+            return False
+        try:
+            self.player.chapter = index
+            return True
+        except Exception as e:
+            logging.warning(f"Error jumping to chapter {index}: {e}")
+            return False
 
     def release(self):
         """Releases MPV resources."""

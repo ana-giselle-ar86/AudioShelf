@@ -131,6 +131,7 @@ class LibraryFrame(wx.Frame):
         self._bind_events()
         self._init_data()
         wx.CallLater(1000, self._check_first_run_after_update)
+        wx.CallLater(1500, self._trigger_startup_scan)
 
     def _init_ui(self):
         """Initializes the UI components and layout."""
@@ -493,3 +494,19 @@ class LibraryFrame(wx.Frame):
             dlg = WhatsNewDialog(self, show_donate=True)
             dlg.ShowModal()
             dlg.Destroy()
+
+    def _trigger_startup_scan(self):
+        """Automatically triggers library scan on startup if an auto-scan folder is configured."""
+        import os
+        import threading
+        
+        if db_manager.get_setting('auto_scan_on_startup') == 'False':
+            return
+
+        auto_scan_folder = db_manager.get_setting('auto_scan_folder')
+        if auto_scan_folder and os.path.exists(auto_scan_folder):
+            if not self.is_busy_processing:
+                self.is_busy_processing = True
+                thread = threading.Thread(target=menu_handlers._auto_scan_worker, args=(self, auto_scan_folder))
+                thread.daemon = True
+                thread.start()

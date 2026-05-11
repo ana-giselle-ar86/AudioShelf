@@ -5,22 +5,27 @@
 import wx
 from database import db_manager
 from i18n import _, SUPPORTED_LANGUAGES
+import sys
+import os
+import winreg
 
 SETTING_LANGUAGE = 'language'
 SETTING_CHECK_UPDATES = 'check_updates_on_startup'
+SETTING_AUTO_SCAN_FOLDER = 'auto_scan_folder'
+SETTING_AUTO_SCAN_STARTUP = 'auto_scan_on_startup'
 
 
 class TabPanel(wx.Panel):
     """
     The "General" settings tab.
-    Handles application language selection and startup update checks.
+    Handles application language selection, AudioShelf folder, and startup update checks.
     """
-
     def __init__(self, parent):
         super(TabPanel, self).__init__(parent)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # Language Settings
         lang_box = wx.StaticBox(self, label=_("Language"))
         lang_box_sizer = wx.StaticBoxSizer(lang_box, wx.VERTICAL)
 
@@ -48,6 +53,45 @@ class TabPanel(wx.Panel):
 
         main_sizer.Add(lang_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
 
+        # AudioShelf folder Settings
+        folder_box = wx.StaticBox(self, label=_("AudioShelf Folder"))
+        folder_box_sizer = wx.StaticBoxSizer(folder_box, wx.VERTICAL)
+
+        self.auto_scan_startup_checkbox = wx.CheckBox(self, label=_("Automatically scan the folder for new books on startup"))
+        folder_box_sizer.Add(self.auto_scan_startup_checkbox, 0, wx.ALL | wx.EXPAND, 8)
+
+        folder_label = wx.StaticText(self, label=_("Select a folder to automatically scan for new books:"))
+        folder_box_sizer.Add(folder_label, 0, wx.ALL, 8)
+
+        folder_hz_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        
+        self.folder_text = wx.TextCtrl(self, style=wx.BORDER_SUNKEN, name=_("AudioShelf folder Path"))
+        self.folder_text.SetMinSize((300, -1))
+        folder_hz_sizer.Add(self.folder_text, 1, wx.EXPAND | wx.RIGHT, 8)
+
+        self.browse_btn = wx.Button(self, label=_("Browse..."))
+        self.browse_btn.Bind(wx.EVT_BUTTON, self._on_browse_folder)
+        folder_hz_sizer.Add(self.browse_btn, 0, wx.ALIGN_CENTER_VERTICAL)
+
+        folder_box_sizer.Add(folder_hz_sizer, 0, wx.EXPAND | wx.ALL, 8)
+
+        main_sizer.Add(folder_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
+
+        self.is_portable = self._check_is_portable()
+
+        # Windows Integration
+        if sys.platform == "win32" and not self.is_portable:
+            windows_box = wx.StaticBox(self, label=_("Windows Integration"))
+            windows_box_sizer = wx.StaticBoxSizer(windows_box, wx.VERTICAL)
+
+            self.context_menu_checkbox = wx.CheckBox(self, label=_("Add AudioShelf to Windows Explorer context menu"))
+            windows_box_sizer.Add(self.context_menu_checkbox, 0, wx.ALL | wx.EXPAND, 8)
+
+            main_sizer.Add(windows_box_sizer, 0, wx.EXPAND | wx.ALL, 10)
+        else:
+            self.context_menu_checkbox = None
+
+        # Updates Settings
         update_box = wx.StaticBox(self, label=_("Updates"))
         update_box_sizer = wx.StaticBoxSizer(update_box, wx.VERTICAL)
 
@@ -65,6 +109,7 @@ class TabPanel(wx.Panel):
 
     def _load_settings(self):
         """Loads settings from the database."""
+
         current_lang = db_manager.get_setting(SETTING_LANGUAGE) or 'en'
         self.lang_combo.SetValue(self.lang_map_rev.get(current_lang, _("English (en)")))
 
@@ -75,6 +120,24 @@ class TabPanel(wx.Panel):
         is_checked = (check_updates == 'True' or check_updates is None)
         self.update_checkbox.SetValue(is_checked)
 
+        auto_scan_startup = db_manager.get_setting(SETTING_AUTO_SCAN_STARTUP)
+        self.auto_scan_startup_checkbox.SetValue(auto_scan_startup != 'False')
+
+        current_folder = db_manager.get_setting(SETTING_AUTO_SCAN_FOLDER)
+        if not current_folder:
+            from database import _get_default_documents_folder
+            current_folder = os.path.join(_get_default_documents_folder(), "AudioShelf")
+            if not os.path.exists(current_folder):
+                try:
+                    os.makedirs(current_folder, exist_ok=True)
+                except OSError:
+                    pass
+        self.folder_text.SetValue(current_folder)
+
+        if self.context_menu_checkbox:
+            is_installed = self._is_context_menu_installed()
+            self.context_menu_checkbox.SetValue(is_installed)
+
     def save_settings(self):
         """Saves settings to the database."""
         selected_lang_display = self.lang_combo.GetValue()
@@ -84,6 +147,97 @@ class TabPanel(wx.Panel):
         update_val = 'True' if self.update_checkbox.GetValue() else 'False'
         db_manager.set_setting(SETTING_CHECK_UPDATES, update_val)
 
+        auto_scan_val = 'True' if self.auto_scan_startup_checkbox.GetValue() else 'False'
+        db_manager.set_setting(SETTING_AUTO_SCAN_STARTUP, auto_scan_val)
+
+        db_manager.set_setting(SETTING_AUTO_SCAN_FOLDER, self.folder_text.GetValue().strip())
+
+        if self.context_menu_checkbox:
+            want_installed = self.context_menu_checkbox.GetValue()
+            is_installed = self._is_context_menu_installed()
+            
+            if want_installed and not is_installed:
+                self._install_context_menu()
+            elif not want_installed and is_installed:
+                self._uninstall_context_menu()
+
+    def _check_is_portable(self) -> bool:
+        PORTABLE_MARKER_FILE = ".portable"
+        is_frozen = getattr(sys, 'frozen', False)
+        
+        if is_frozen:
+            app_path = os.path.dirname(sys.executable)
+            internal_path = os.path.join(app_path, '_libs')
+        else:
+            app_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            internal_path = app_path
+
+        paths_to_check = [
+            os.path.join(app_path, PORTABLE_MARKER_FILE),
+            os.path.join(internal_path, PORTABLE_MARKER_FILE)
+        ]
+        
+        for p in paths_to_check:
+            if os.path.exists(p):
+                return True
+        return False
+
+    def _is_context_menu_installed(self) -> bool:
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Classes\Directory\shell\AudioShelf"):
+                return True
+        except FileNotFoundError:
+            return False
+
+    def _install_context_menu(self):
+        try:
+            exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(sys.argv[0])
+            
+            main_menu_name = "AudioShelf"
+            add_text = _("Add to Library")
+            copy_text = _("Copy to AudioShelf folder")
+            move_text = _("Move to AudioShelf folder")
+
+            for base_key in [r"Software\Classes\Directory\shell", r"Software\Classes\*\shell"]:
+                key_main = winreg.CreateKey(winreg.HKEY_CURRENT_USER, rf"{base_key}\AudioShelf")
+                winreg.SetValueEx(key_main, "MUIVerb", 0, winreg.REG_SZ, main_menu_name)
+                winreg.SetValueEx(key_main, "Icon", 0, winreg.REG_SZ, f'"{exe_path}"')
+                winreg.SetValueEx(key_main, "SubCommands", 0, winreg.REG_SZ, "")
+                
+                shell_key = winreg.CreateKey(key_main, "shell")
+                
+                cmd_add = winreg.CreateKey(shell_key, "cmd1")
+                winreg.SetValueEx(cmd_add, "MUIVerb", 0, winreg.REG_SZ, add_text)
+                winreg.SetValueEx(winreg.CreateKey(cmd_add, "command"), "", 0, winreg.REG_SZ, f'"{exe_path}" "%1"')
+                
+
+                cmd_copy = winreg.CreateKey(shell_key, "cmd2")
+                winreg.SetValueEx(cmd_copy, "MUIVerb", 0, winreg.REG_SZ, copy_text)
+                winreg.SetValueEx(winreg.CreateKey(cmd_copy, "command"), "", 0, winreg.REG_SZ, f'"{exe_path}" --copy-to-autoscan "%1"')
+                
+                cmd_move = winreg.CreateKey(shell_key, "cmd3")
+                winreg.SetValueEx(cmd_move, "MUIVerb", 0, winreg.REG_SZ, move_text)
+                winreg.SetValueEx(winreg.CreateKey(cmd_move, "command"), "", 0, winreg.REG_SZ, f'"{exe_path}" --move-to-autoscan "%1"')
+        except Exception as e:
+            print(f"Error installing context menu: {e}")
+
+    def _uninstall_context_menu(self):
+        def delete_sub_key(base_path):
+            try:
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell\cmd1\command")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell\cmd1")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell\cmd2\command")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell\cmd2")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell\cmd3\command")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell\cmd3")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, rf"{base_path}\shell")
+                winreg.DeleteKey(winreg.HKEY_CURRENT_USER, base_path)
+            except FileNotFoundError:
+                pass
+                
+        delete_sub_key(r"Software\Classes\Directory\shell\AudioShelf")
+        delete_sub_key(r"Software\Classes\*\shell\AudioShelf")
+
     def get_current_language_on_load(self) -> str:
         """Returns the language code that was active when the tab was initialized."""
         return self.current_lang_on_load
@@ -91,3 +245,14 @@ class TabPanel(wx.Panel):
     def get_selected_language(self) -> str:
         """Returns the language code selected by the user."""
         return self.selected_lang_code
+
+    def _on_browse_folder(self, event):
+        current_path = self.folder_text.GetValue()
+        if not os.path.exists(current_path):
+            from database import _get_default_documents_folder
+            current_path = _get_default_documents_folder()
+            
+        dlg = wx.DirDialog(self, _("Select AudioShelf folder"), defaultPath=current_path, style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST)
+        if dlg.ShowModal() == wx.ID_OK:
+            self.folder_text.SetValue(dlg.GetPath())
+        dlg.Destroy()

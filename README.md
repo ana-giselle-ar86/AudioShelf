@@ -140,16 +140,3 @@ If you would like to help:
 Copyright (c) 2025-2026 Mehdi Rajabi.
 AudioShelf is Free Software: You can use, study, share and improve it at your will.
 Specifically you can redistribute and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
----
-
-## Code Signing Policy
-
-This project uses free code signing provided by [SignPath.io](https://signpath.io) and a certificate issued by [SignPath Foundation](https://signpath.org).
-
-### Team Roles and Responsibilities
-* **Maintainer & Reviewer:** [Mehdi Rajabi](https://github.com/M-Rajabi-dev) (Owner)
-* **Approver:** [Mehdi Rajabi](https://github.com/M-Rajabi-dev) (Owner)
-
-### Privacy Policy
-This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.

@@ -13,7 +13,7 @@ import subprocess
 import book_scanner
 
 from database import db_manager, DB_FILE_PATH
-from i18n import _
+from i18n import _, ngettext
 from nvda_controller import speak, LEVEL_CRITICAL, LEVEL_MINIMAL
 from dialogs import settings_dialog, about_dialog, shortcuts_dialog, donate_dialog, user_guide_dialog
 from dialogs.confirm_dialog import CheckboxConfirmDialog
@@ -50,12 +50,97 @@ def on_create_shelf(frame, event):
         dlg.Destroy()
 
 
+def _auto_scan_worker(frame, auto_scan_folder: str):
+    success_count = 0
+    books_to_update_background = []
+    
+    try:
+        from db_layer.helpers import find_missing_books
+        all_books = db_manager.get_all_books_for_pruning()
+        missing_books = find_missing_books(all_books)
+        if missing_books:
+            db_manager.prune_missing_books([b[0] for b in missing_books])
+    except Exception as e:
+        logging.error(f"Error pruning missing books during refresh: {e}")
+
+    if auto_scan_folder and os.path.exists(auto_scan_folder):
+        try:
+            existing_paths = {os.path.normcase(os.path.normpath(path)) for ign1, ign2, path in db_manager.book_repo.get_all_books_for_pruning()}
+        except Exception:
+            existing_paths = set()
+
+        for entry in os.scandir(auto_scan_folder):
+            path = entry.path
+            
+            if os.path.normcase(os.path.normpath(path)) in existing_paths:
+                continue
+                
+            if entry.is_dir(follow_symlinks=False):
+                book_name = entry.name
+            elif entry.is_file(follow_symlinks=False):
+                name_part, ext = os.path.splitext(entry.name)
+                if ext.lower() in book_scanner.SUPPORTED_EXTENSIONS:
+                    book_name = name_part
+                else:
+                    continue
+            else:
+                continue
+                
+            wx.CallAfter(lambda n=book_name: speak(_("Scanning {0}...").format(n), LEVEL_MINIMAL))
+            
+            try:
+                file_list = book_scanner.scan_folder(path, fast_scan=True)
+                if not file_list:
+                    continue
+
+                book_id, imported = task_handlers.process_book_import(path, book_name, file_list, 1)
+
+                if book_id:
+                    success_count += 1
+                    books_to_update_background.append((book_id, file_list))
+
+            except Exception as e:
+                logging.error(f"Auto-scan error for {path}: {e}", exc_info=True)
+
+        for b_id, f_list in books_to_update_background:
+            threading.Thread(
+                target=task_handlers._background_duration_worker,
+                args=(frame, b_id, f_list),
+                daemon=True
+            ).start()
+
+    def _finalize():
+        task_handlers._reset_busy_state(frame)
+        list_manager.refresh_library_data(frame)
+        list_manager.populate_library_list(frame)
+        history_manager.populate_history_list(frame, frame.shelves_data)
+
+        if success_count > 0:
+            msg = ngettext(
+                "One new book added to the library.",
+                "{0} new books added to the library.",
+                success_count
+            ).format(success_count)
+            speak(msg, LEVEL_CRITICAL)
+        else:
+            speak(_("Library refreshed. No new books found."), LEVEL_MINIMAL)
+
+    wx.CallAfter(_finalize)
+
+
 def on_refresh_library(frame, event):
-    """Refreshes the library data and UI list."""
     speak(_("Refreshing library."), LEVEL_MINIMAL)
-    list_manager.refresh_library_data(frame)
-    list_manager.populate_library_list(frame)
-    history_manager.populate_history_list(frame, frame.shelves_data)
+    
+    auto_scan_folder = db_manager.get_setting('auto_scan_folder')
+    if auto_scan_folder and os.path.exists(auto_scan_folder):
+        frame.is_busy_processing = True
+        thread = threading.Thread(target=_auto_scan_worker, args=(frame, auto_scan_folder))
+        thread.daemon = True
+        thread.start()
+    else:
+        list_manager.refresh_library_data(frame)
+        list_manager.populate_library_list(frame)
+        history_manager.populate_history_list(frame, frame.shelves_data)
 
 
 def on_settings(frame, event):
