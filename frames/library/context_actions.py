@@ -45,6 +45,7 @@ on_context_pin_book = book_actions.on_context_pin_book
 on_context_unpin_book = book_actions.on_context_unpin_book
 on_context_mark_finished = book_actions.on_context_mark_finished
 on_context_mark_unfinished = book_actions.on_context_mark_unfinished
+on_context_rescan_book = book_actions.on_context_rescan_book
 
 # Re-export Shelf Actions
 on_context_move_to_shelf = shelf_actions.on_context_move_to_shelf

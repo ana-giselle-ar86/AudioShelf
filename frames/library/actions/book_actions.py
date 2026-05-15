@@ -142,7 +142,7 @@ def on_context_update_location(frame, event, source='library'):
             frame.is_busy_processing = True
             try:
                 thread = threading.Thread(target=task_handlers._scan_book_update_worker,
-                                          args=(frame, book_id, new_path))
+                                          args=(frame, book_id, new_path, False))
                 thread.daemon = True
                 thread.start()
             except Exception as e:
@@ -403,3 +403,38 @@ def on_context_mark_unfinished(frame, event, source='library'):
         action_utils.refresh_all_views(frame)
     except Exception:
         speak(_("Error updating book status."), LEVEL_CRITICAL)
+
+def on_context_rescan_book(frame, event, source='library'):
+    selected_books = action_utils.get_selected_book_data_list(frame, source)
+    if len(selected_books) > 1:
+        speak(_("Cannot rescan multiple items at once."), LEVEL_CRITICAL)
+        return
+
+    book_info = action_utils.get_focused_book_info(frame, source)
+    if not book_info:
+        return
+
+    book_id, book_title = book_info
+    book_path = db_manager.book_repo.get_book_path(book_id)
+
+    if not book_path or not os.path.exists(book_path):
+        speak(_("Book location not found."), LEVEL_CRITICAL)
+        return
+
+    if frame.is_busy_processing:
+        speak(_("Already scanning. Please wait."), LEVEL_CRITICAL)
+        return
+
+    speak(_("Rescanning book..."), LEVEL_MINIMAL)
+    wx.BeginBusyCursor()
+    frame.is_busy_processing = True
+
+    try:
+        thread = threading.Thread(target=task_handlers._scan_book_update_worker,
+                                  args=(frame, book_id, book_path, True))
+        thread.daemon = True
+        thread.start()
+    except Exception as e:
+        logging.error(f"Failed to start rescan thread for {book_path}: {e}", exc_info=True)
+        speak(_("Error starting scan."), LEVEL_CRITICAL)
+        task_handlers._reset_busy_state(frame)
