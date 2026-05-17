@@ -4,7 +4,6 @@ block_cipher = None
 
 # External dependencies required for runtime
 app_data_files = [
-    ('nvdaControllerClient.dll', '.'),
     ('libmpv-2.dll', '.'),
     ('AudioShelf.ico', '.'),
     ('VERSION', '.'),
