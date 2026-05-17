@@ -66,7 +66,6 @@ class GoToFileDialog(wx.Dialog):
         if self._validate_input():
             self.EndModal(wx.ID_OK)
         else:
-            speak(_("Invalid number."), LEVEL_MINIMAL)
             wx.MessageBox(
                 _("Invalid format. Please enter a number between 1 and {0}.").format(self.max_file_num),
                 _("Invalid Input"),

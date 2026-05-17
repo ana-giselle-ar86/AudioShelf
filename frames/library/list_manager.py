@@ -306,7 +306,6 @@ class LibraryListManager:
             frame.library_list.Select(new_idx, True)
             frame.library_list.Focus(new_idx)
             frame.library_list.EnsureVisible(new_idx)
-            speak(frame.library_list.GetItemText(new_idx), LEVEL_MINIMAL)
             return
 
         current_idx = -1

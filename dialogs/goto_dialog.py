@@ -65,7 +65,6 @@ class GoToDialog(wx.Dialog):
         if self.get_time_in_ms() is not None:
             self.EndModal(wx.ID_OK)
         else:
-            speak(_("Invalid format."), LEVEL_MINIMAL)
             wx.MessageBox(
                 _("Invalid format. Please enter time as HH:MM:SS or percentage as 50%."),
                 _("Invalid Input"),
