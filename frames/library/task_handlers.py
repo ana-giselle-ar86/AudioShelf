@@ -315,6 +315,9 @@ def on_scan_complete(frame, event: wx.lib.newevent.NewEvent):
             list_manager.refresh_library_data(frame)
             
             if book_id_to_select:
+                if frame.current_view_level != shelf_id:
+                    frame.nav_stack_back.append((frame.current_view_level, frame.last_library_focus_index))
+                    frame.nav_stack_forward.clear()
                 frame.current_view_level = shelf_id
                 frame.current_filter = ""
                 if hasattr(frame, 'search_ctrl'):

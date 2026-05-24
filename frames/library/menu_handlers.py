@@ -327,6 +327,9 @@ def _batch_paste_worker(frame, paths: list, shelf_id: int):
         list_manager.refresh_library_data(frame)
 
         if last_added_book_id:
+            if frame.current_view_level != shelf_id:
+                frame.nav_stack_back.append((frame.current_view_level, frame.last_library_focus_index))
+                frame.nav_stack_forward.clear()
             frame.current_view_level = shelf_id
             frame.current_filter = ""
             if hasattr(frame, 'search_ctrl') and frame.search_ctrl:
