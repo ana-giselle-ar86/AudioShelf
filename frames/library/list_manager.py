@@ -385,6 +385,102 @@ class LibraryListManager:
         frame.SetStatusText(status)
         event.Skip()
 
+    def _speak_book_column(self, frame, col_index: int, book_id: int, list_index: int, map_index: int):
+        from utils import format_time_spoken
+        from db_layer.helpers import get_book_size_on_disk
+
+        if col_index == 0:
+            title = self.get_virtual_item_text(map_index, 0) if frame.library_list.HasFlag(wx.LC_VIRTUAL) else frame.library_list.GetItemText(list_index)
+            speak(title, LEVEL_CRITICAL)
+            return
+
+        details = db_manager.book_repo.get_book_details(book_id)
+        if not details:
+            return
+
+        if col_index in (1, 2, 3, 4):
+            files = db_manager.get_book_files(book_id)
+            total_duration_ms = sum(f[3] for f in files if f[3])
+            
+            is_calculating = (total_duration_ms == 0 and len(files) > 0)
+
+            if col_index == 1:
+                if is_calculating:
+                    speak(f"{_('Total Duration')}: {_('Calculating...')}", LEVEL_CRITICAL)
+                else:
+                    speak(f"{_('Total Duration')}: {format_time_spoken(total_duration_ms)}", LEVEL_CRITICAL)
+                return
+            
+            elapsed_ms = 0
+            playback = db_manager.get_playback_state(book_id)
+            if playback and len(files) > 0:
+                idx = playback.get('last_file_index', 0)
+                pos = playback.get('last_position_ms', 0)
+                for i in range(idx):
+                    if i < len(files):
+                        elapsed_ms += (files[i][3] or 0)
+                elapsed_ms += pos
+            
+            if details.get('is_finished'):
+                elapsed_ms = total_duration_ms
+                
+            if col_index == 2:
+                if is_calculating and not details.get('is_finished') and elapsed_ms == 0:
+                    speak(f"{_('Time Elapsed')}: {_('Calculating...')}", LEVEL_CRITICAL)
+                else:
+                    speak(f"{_('Time Elapsed')}: {format_time_spoken(elapsed_ms)}", LEVEL_CRITICAL)
+                return
+                
+            if col_index == 3:
+                if is_calculating and not details.get('is_finished'):
+                    speak(f"{_('Time Remaining')}: {_('Calculating...')}", LEVEL_CRITICAL)
+                else:
+                    remaining_ms = max(0, total_duration_ms - elapsed_ms)
+                    speak(f"{_('Time Remaining')}: {format_time_spoken(remaining_ms)}", LEVEL_CRITICAL)
+                return
+                
+            if col_index == 4:
+                file_count = len(files)
+                speak(f"{_('File Count')}: {file_count}", LEVEL_CRITICAL)
+                return
+
+        if col_index == 5:
+            book_path = details.get('root_path')
+            
+            if not hasattr(self, '_book_sizes_cache'):
+                self._book_sizes_cache = {}
+                
+            def speak_size_val(size_bytes):
+                if size_bytes is None:
+                    size_str = _("Unknown")
+                elif size_bytes < 1024:
+                    size_str = f"{size_bytes} B"
+                elif size_bytes < 1024 ** 2:
+                    size_str = f"{size_bytes / 1024:.1f} KB"
+                elif size_bytes < 1024 ** 3:
+                    size_str = f"{size_bytes / (1024 ** 2):.1f} MB"
+                else:
+                    size_str = f"{size_bytes / (1024 ** 3):.1f} GB"
+                speak(f"{_('Total Size')}: {size_str}", LEVEL_CRITICAL)
+
+            if book_id in self._book_sizes_cache:
+                speak_size_val(self._book_sizes_cache[book_id])
+            else:
+                speak(f"{_('Total Size')}: {_('Calculating...')}", LEVEL_CRITICAL)
+                import threading
+                def _calc():
+                    size = get_book_size_on_disk(book_path)
+                    self._book_sizes_cache[book_id] = size
+
+                    def _announce():
+                        if getattr(frame, 'library_column_index', 0) == 5:
+                            focused = frame.library_list.GetFocusedItem()
+                            if focused == list_index:
+                                speak_size_val(size)
+                    wx.CallAfter(_announce)
+                threading.Thread(target=_calc, daemon=True).start()
+            return
+
     def on_list_char_hook(self, frame, event: wx.KeyEvent):
         """Handles keyboard shortcuts within the library list."""
         # Late import to avoid circular dependency issues during refactor
@@ -396,6 +492,32 @@ class LibraryListManager:
         alt_down = event.AltDown()
         shift_down = event.ShiftDown()
 
+        if not hasattr(frame, 'library_column_index'):
+            frame.library_column_index = 0
+
+        if keycode in (wx.WXK_UP, wx.WXK_DOWN):
+            frame.library_column_index = 0
+            event.Skip()
+            return
+
+        if keycode in (wx.WXK_LEFT, wx.WXK_RIGHT) and not alt_down and not ctrl_down and not shift_down:
+            focused_index = frame.library_list.GetFocusedItem()
+            if focused_index != -1:
+                map_index = focused_index if frame.library_list.HasFlag(wx.LC_VIRTUAL) else frame.library_list.GetItemData(focused_index)
+                item_data = self.get_data_from_index(map_index)
+                
+                if item_data and item_data[0] == 'book':
+                    if keycode == wx.WXK_LEFT:
+                        if frame.library_column_index > 0:
+                            frame.library_column_index -= 1
+                            self._speak_book_column(frame, frame.library_column_index, item_data[1], focused_index, map_index)
+                    elif keycode == wx.WXK_RIGHT:
+                        if frame.library_column_index < 5:
+                            frame.library_column_index += 1
+                            self._speak_book_column(frame, frame.library_column_index, item_data[1], focused_index, map_index)
+                            
+            return
+        
         if alt_down and keycode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
             context_actions.on_context_properties(frame, None, source='library')
             return
