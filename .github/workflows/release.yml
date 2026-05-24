@@ -36,10 +36,6 @@ jobs:
           echo "VERSION=$ver" >> $env:GITHUB_ENV
           Write-Host "Detected Version: $ver"
 
-      - name: Generate Version Info for Exe
-        run: |
-          python create_version.py $env:VERSION
-
       - name: Build with PyInstaller
         run: |
           python -m PyInstaller AudioShelf.spec
@@ -73,13 +69,23 @@ jobs:
               exit 1
           }
 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: AudioShelf-Builds
+          path: |
+            ${{ env.PORTABLE_ZIP_NAME }}
+            ${{ env.SETUP_EXE_NAME }}
+          retention-days: 7
+
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             ${{ env.PORTABLE_ZIP_NAME }}
             ${{ env.SETUP_EXE_NAME }}
           body_path: CHANGELOG.md
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

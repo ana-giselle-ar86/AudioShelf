@@ -83,7 +83,6 @@ class SettingsDialog(wx.Dialog):
 
             lang_after = self.general_panel.get_selected_language()
             if lang_after != lang_before:
-                speak(_("Language change detected. Please restart the application."), LEVEL_CRITICAL)
                 wx.MessageBox(
                     _("Language changes will take effect after you restart AudioShelf."),
                     _("Restart Required"),

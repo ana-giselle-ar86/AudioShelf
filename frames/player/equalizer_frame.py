@@ -247,7 +247,6 @@ class EqualizerFrame(wx.Frame):
             settings = preset['settings']
             self._settings_to_sliders(settings)
             self._update_filters_and_notify_parent()
-            speak(f"{preset['name']}", LEVEL_MINIMAL)
         except Exception as e:
             logging.error(f"Error loading preset: {e}")
         finally:

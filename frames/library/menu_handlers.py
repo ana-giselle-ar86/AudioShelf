@@ -229,7 +229,6 @@ def on_export_database(frame, event):
             logging.info(f"Database exported to: {target_path}")
         except Exception as e:
             logging.error(f"Error exporting database: {e}", exc_info=True)
-            speak(_("Error exporting database."), LEVEL_CRITICAL)
             wx.MessageBox(_("Failed to export database.\nError: {0}").format(e), _("Error"), wx.OK | wx.ICON_ERROR)
     
     dlg.Destroy()
@@ -261,7 +260,6 @@ def on_import_database(frame, event):
             db_manager.close()
             shutil.copy2(source_path, DB_FILE_PATH)
             
-            speak(_("Import successful. Application will close."), LEVEL_CRITICAL)
             wx.MessageBox(_("Database imported successfully.\nPlease restart AudioShelf."), _("Import Complete"), wx.OK)
             
             frame.Close(force=True)
@@ -269,7 +267,7 @@ def on_import_database(frame, event):
             
         except Exception as e:
             logging.error(f"Error importing database: {e}", exc_info=True)
-            speak(_("Error importing database."), LEVEL_CRITICAL)
+
             wx.MessageBox(_("Failed to import database.\nError: {0}").format(e), _("Error"), wx.OK | wx.ICON_ERROR)
             
             db_manager._establish_connection()

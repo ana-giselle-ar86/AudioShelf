@@ -4,6 +4,7 @@
 
 import logging
 import sqlite3
+import os
 from typing import Dict, Optional, List, Any, Tuple
 
 
@@ -118,12 +119,44 @@ class BookRepository:
                 cur.close()
 
     def update_book_source(self, book_id: int, new_root_path: str, new_file_list: List[Tuple[str, int, int]]):
-        """Updates the root path and file list for an existing book."""
         if self.conn is None:
             return
         try:
             with self.conn:
                 cur = self.conn.cursor()
+                
+                cur.execute("SELECT file_path, file_index FROM playable_files WHERE book_id = ?", (book_id,))
+                old_files = cur.fetchall()
+                
+                cur.execute("SELECT root_path FROM books WHERE id = ?", (book_id,))
+                root_path_row = cur.fetchone()
+                old_root_path = root_path_row[0] if root_path_row else ""
+                
+                old_relpath_to_index = {}
+                for fpath, idx in old_files:
+                    try:
+                        rel = os.path.relpath(fpath, old_root_path).replace('\\', '/')
+                        old_relpath_to_index[os.path.normcase(rel)] = idx
+                    except ValueError:
+                        old_relpath_to_index[os.path.normcase(os.path.basename(fpath))] = idx
+                        
+                current_relpath_to_index = {}
+                is_dir_source = os.path.isdir(new_root_path)
+                for fpath, idx, dur in new_file_list:
+                    try:
+                        if is_dir_source:
+                            rel = os.path.relpath(fpath, new_root_path).replace('\\', '/')
+                        else:
+                            rel = os.path.basename(fpath)
+                        current_relpath_to_index[os.path.normcase(rel)] = idx
+                    except ValueError:
+                        current_relpath_to_index[os.path.normcase(os.path.basename(fpath))] = idx
+                        
+                index_map = {}
+                for rel_p, old_idx in old_relpath_to_index.items():
+                    if rel_p in current_relpath_to_index:
+                        index_map[old_idx] = current_relpath_to_index[rel_p]
+
                 cur.execute("DELETE FROM playable_files WHERE book_id = ?", (book_id,))
 
                 if new_file_list:
@@ -140,6 +173,28 @@ class BookRepository:
                     "UPDATE books SET root_path = ? WHERE id = ?",
                     (new_root_path, book_id)
                 )
+
+                cur.execute("SELECT last_file_index FROM playback_state WHERE book_id = ?", (book_id,))
+                pb_row = cur.fetchone()
+                if pb_row:
+                    old_pb_idx = pb_row[0]
+                    if old_pb_idx in index_map:
+                        new_pb_idx = index_map[old_pb_idx]
+                        if new_pb_idx != old_pb_idx:
+                            cur.execute("UPDATE playback_state SET last_file_index = ? WHERE book_id = ?", (new_pb_idx, book_id))
+                    else:
+                        cur.execute("UPDATE playback_state SET last_file_index = 0, last_position_ms = 0 WHERE book_id = ?", (book_id,))
+
+                cur.execute("SELECT id, file_index FROM bookmarks WHERE book_id = ?", (book_id,))
+                bms = cur.fetchall()
+                for bm_id, old_bm_idx in bms:
+                    if old_bm_idx in index_map:
+                        new_bm_idx = index_map[old_bm_idx]
+                        if new_bm_idx != old_bm_idx:
+                            cur.execute("UPDATE bookmarks SET file_index = ? WHERE id = ?", (new_bm_idx, bm_id))
+                    else:
+                        cur.execute("DELETE FROM bookmarks WHERE id = ?", (bm_id,))
+
         except sqlite3.Error as e:
             logging.error(f"Error in update_book_source transaction: {e}", exc_info=True)
             raise

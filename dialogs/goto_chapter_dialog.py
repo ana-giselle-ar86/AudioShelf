@@ -1,6 +1,6 @@
 # dialogs/goto_chapter_dialog.py
 # Copyright (c) 2025-2026 Mehdi Rajabi
-# License: GNU General Public License v3.0
+# License: GNU General Public License v3.0 (See LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import wx
 import re
@@ -51,7 +51,6 @@ class GoToChapterDialog(wx.Dialog):
         if self._validate_input():
             self.EndModal(wx.ID_OK)
         else:
-            speak(_("Invalid number."), LEVEL_MINIMAL)
             wx.MessageBox(
                 _("Invalid format. Please enter a number between 1 and {0}.").format(self.max_chapter_num),
                 _("Invalid Input"), wx.OK | wx.ICON_ERROR

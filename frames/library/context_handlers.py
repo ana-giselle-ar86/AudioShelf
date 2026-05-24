@@ -176,6 +176,10 @@ def _build_book_menu(frame, book_id: int, source: str, selected_count: int):
     update_loc.Enable(is_single_selection)
     menu.Append(update_loc)
 
+    rescan_item = wx.MenuItem(menu, lf.ID_TREE_RESCAN_BOOK, _("Rescan Book"))
+    rescan_item.Enable(is_single_selection)
+    menu.Append(rescan_item)
+
     export_item = wx.MenuItem(menu, lf.ID_TREE_EXPORT_DATA, _("Save Data to Source..."))
     export_item.Enable(is_single_selection)
     menu.Append(export_item)

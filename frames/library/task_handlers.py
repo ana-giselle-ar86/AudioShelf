@@ -386,37 +386,46 @@ def _background_duration_worker(frame, book_id, file_list):
         logging.error(f"Background metadata worker failed for Book ID {book_id}: {e}", exc_info=True)
 
 
-def _scan_book_update_worker(frame, book_id, new_path):
-    """Background worker to scan for file updates (full scan)."""
+def _scan_book_update_worker(frame, book_id, new_path, is_rescan=False):
     try:
         logging.debug(f"Update worker started for book {book_id} at {new_path}")
         file_list = book_scanner.scan_folder(new_path, fast_scan=False)
         wx.PostEvent(frame, frame.UpdateScanResultEvent(
             book_id=book_id,
             new_path=new_path,
-            file_list=file_list
+            file_list=file_list,
+            is_rescan=is_rescan
         ))
     except Exception as e:
         logging.error(f"Error in update scan thread for {new_path}: {e}", exc_info=True)
         wx.PostEvent(frame, frame.UpdateScanResultEvent(
             book_id=book_id,
             new_path=new_path,
-            file_list=None
+            file_list=None,
+            is_rescan=is_rescan
         ))
 
 
 def on_scan_update_complete(frame, event: wx.lib.newevent.NewEvent):
-    """Handles the completion of a location update scan."""
     try:
         if event.file_list is None:
             raise Exception("Update scan worker thread failed.")
 
+        is_rescan = getattr(event, 'is_rescan', False)
+
         if not event.file_list:
-            speak(_("No playable files found in new location."), LEVEL_CRITICAL)
+            if is_rescan:
+                speak(_("No playable files found during rescan."), LEVEL_CRITICAL)
+            else:
+                speak(_("No playable files found in new location."), LEVEL_CRITICAL)
             return
 
         db_manager.update_book_source(event.book_id, event.new_path, event.file_list)
-        speak(_("Book location updated."), LEVEL_CRITICAL)
+        
+        if is_rescan:
+            speak(_("Book rescanned successfully."), LEVEL_CRITICAL)
+        else:
+            speak(_("Book location updated."), LEVEL_CRITICAL)
 
     except Exception as e:
         logging.error(f"Error during book update for {event.new_path}: {e}", exc_info=True)
